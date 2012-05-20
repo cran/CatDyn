@@ -2,7 +2,7 @@
 \alias{CDMN1P.Lik}
 
 \title{
-Likelihood Evaluation of 1-Perturbation Catch Dynamic Model
+Likelihood Evaluation of 1-Perturbation Catch Dynamics Model
 }
 \description{
 This function evaluates a modified profile likelihood approximation to the likelihood
@@ -29,10 +29,10 @@ A numeric vector with observed nominal effort by time step.
 Logical, shall natural be estimated (M.fixed=FALSE) or remain fixed at a given value?
 }
   \item{M}{
-If M.fixed is TRUE, this number sets the value of the natural mortality rate.
+A positive number or NULL; if M.fixed is TRUE, this number sets the value of the natural mortality rate.
 }
   \item{distr}{
-Character. 'normal' or 'lognormal' model for the observed random variable, the catch.
+Character, 'normal' or 'lognormal' model for the observed random variable, the catch.
 }
 }
 \details{

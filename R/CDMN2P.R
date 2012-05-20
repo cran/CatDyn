@@ -87,4 +87,3 @@ function(par,dates,obscat,obseff,obsmbm,M.fixed,M,distr)
                   class(catdynmod) <- "CatDynMod";
                   return(catdynmod);
  }
-

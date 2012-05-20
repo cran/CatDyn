@@ -17,12 +17,12 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                   n.res     <- vector("numeric",sealen);
                   ln.res    <- vector("numeric",sealen);
                   likcontr  <- vector("numeric",sealen);
-                  grMs      <- vector("numeric",sealen);
-                  grN0s     <- vector("numeric",sealen);
-                  grP1s     <- vector("numeric",sealen);
-                  grP2s     <- vector("numeric",sealen);
-                  grP3s     <- vector("numeric",sealen);
-                  grP4s     <- vector("numeric",sealen);
+                  grlogMs   <- vector("numeric",sealen);
+                  grlogN0s  <- vector("numeric",sealen);
+                  grlogP1s  <- vector("numeric",sealen);
+                  grlogP2s  <- vector("numeric",sealen);
+                  grlogP3s  <- vector("numeric",sealen);
+                  grlogP4s  <- vector("numeric",sealen);
                   ind.P1    <- ifelse(1:sealen < (ts.P1-ts.start+1), 0, 1);
                   ind.P2    <- ifelse(1:sealen < (ts.P2-ts.start+1), 0, 1);
                   ind.P3    <- ifelse(1:sealen < (ts.P3-ts.start+1), 0, 1);
@@ -30,31 +30,29 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                   if(M.fixed==TRUE)
                     {
                     M         <- M;
-                    N0        <- exp(par[1]);
-                    P1        <- exp(par[2]);
-                    P2        <- exp(par[3]);
-                    P3        <- exp(par[4]);
-                    P4        <- exp(par[5]);
-                    Scale     <- exp(par[6]);
-                    Alpha     <- exp(par[7]);
-                    Beta      <- exp(par[8]);
-                    expM      <- exp(-M);
-                    expMhalf  <- exp(-M/2);
+                    logN0     <- par[1];
+                    logP1     <- par[2];
+                    logP2     <- par[3];
+                    logP3     <- par[3];
+                    logP4     <- par[4];
+                    logscale  <- par[5];
+                    logalpha  <- par[6];
+                    logbeta   <- par[7];
                     mccum[1]  <- 0;
-                    nstep[1]  <- N0*expM;
+                    nstep[1]  <- exp(logN0)*exp(-M);
                     for(i in 2:sealen)
                        {
-                       mccum[i] <- obscat[i-1] + mccum[i-1]*expM;
-                       nstep[i] <- N0*(expM^i) +
-                                   ind.P1[i]*P1*expM^(i-(ts.P1-ts.start+1)) +
-                                   ind.P2[i]*P2*expM^(i-(ts.P2-ts.start+1)) +
-                                   ind.P3[i]*P3*expM^(i-(ts.P3-ts.start+1)) +
-                                   ind.P4[i]*P4*expM^(i-(ts.P4-ts.start+1)) -
-                                   mccum[i]*expMhalf;
+                       mccum[i] <- obscat[i-1] + mccum[i-1]*exp(-M);
+                       nstep[i] <- exp(logN0)*exp(-M*i) +
+                                   ind.P1[i]*exp(logP1)*exp(-M*(i-(ts.P1-ts.start+1))) +
+                                   ind.P2[i]*exp(logP2)*exp(-M*(i-(ts.P2-ts.start+1))) +
+                                   ind.P3[i]*exp(logP3)*exp(-M*(i-(ts.P3-ts.start+1))) +
+                                   ind.P4[i]*exp(logP4)*exp(-M*(i-(ts.P4-ts.start+1))) -
+                                   mccum[i]*exp(-M/2);
                        }
-                    effeff     <- obseff^Alpha;
-                    effn       <- nstep^Beta;
-                    predcat    <- Scale*(effeff*effn)*expMhalf;
+                    effeff     <- obseff^(exp(logalpha));
+                    effn       <- nstep^(exp(logbeta));
+                    predcat    <- exp(logscale)*(effeff*effn)*exp(-M/2);
                     n.res      <- obscat-predcat;
                     ln.res     <- ifelse(obscat==0 | predcat==0,0,log(obscat)-log(predcat));
                     if(distr=='normal')
@@ -62,98 +60,96 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                        totlik        <- sum(n.res^2);
                        for(i in 1:sealen)
                            {
-                           grN0s[i] <- effeff[i]*(expM^i)*expMhalf*N0*Scale*Beta*n.res[i]*(nstep[i]^(Beta-1));
+                           grlogN0s[i] <- effeff[i]*exp(-i*M-M/2+logN0+logscale+logbeta)*n.res[i]*(nstep[i]^(exp(logbeta)-1));
                            }
-                       grad.N0    <- -(sealen-2)*sum(grN0s)/totlik;
-                       for(i in 1:(ts.end-ts.P1+1))
+                       grad.logN0    <- -((sealen-2)*sum(grlogN0s))/totlik;
+                       for(i in (ts.P1-ts.start+1):sealen)
                            {
-                           grP1s[i] <- effeff[i+(ts.P1-ts.start)]*(expM^i)*expMhalf*P1*Scale*Beta*n.res[i+(ts.P1-ts.start)]*(nstep[i+(ts.P1-ts.start)]^(Beta-1));
+                           grlogP1s[i] <- effeff[i]*exp(-M*(i-(ts.P1-ts.start+1))-M/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P1    <- -(sum(ind.P1)-2)*sum(grP1s)/sum(n.res[(ts.P1-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P2+1))
+                       grad.logP1    <- -((sum(ind.P1)-2)*sum(grlogP1s))/sum(n.res[(ts.P1-ts.start+1):sealen]^2);
+                       for(i in (ts.P2-ts.start+1):sealen)
                            {
-                           grP2s[i] <- effeff[i+(ts.P2-ts.start)]*(expM^i)*expMhalf*P2*Scale*Beta*n.res[i+(ts.P2-ts.start)]*(nstep[i+(ts.P2-ts.start)]^(Beta-1));
+                           grlogP2s[i] <- effeff[i]*exp(-M*(i-(ts.P2-ts.start+1))-M/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P2    <- -(sum(ind.P2)-2)*sum(grP2s)/sum(n.res[(ts.P2-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P3+1))
+                       grad.logP2    <- -((sum(ind.P2)-2)*sum(grlogP2s))/sum(n.res[(ts.P2-ts.start+1):sealen]^2);
+                       for(i in (ts.P3-ts.start+1):sealen)
                            {
-                           grP3s[i] <- effeff[i+(ts.P3-ts.start)]*(expM^i)*expMhalf*P3*Scale*Beta*n.res[i+(ts.P3-ts.start)]*(nstep[i+(ts.P3-ts.start)]^(Beta-1));
+                           grlogP3s[i] <- effeff[i]*exp(-M*(i-(ts.P3-ts.start+1))-M/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P3    <- -(sum(ind.P3)-2)*sum(grP3s)/sum(n.res[(ts.P3-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P4+1))
+                       grad.logP3    <- -((sum(ind.P3)-2)*sum(grlogP3s))/sum(n.res[(ts.P3-ts.start+1):sealen]^2);
+                       for(i in (ts.P4-ts.start+1):sealen)
                            {
-                           grP4s[i] <- effeff[i+(ts.P4-ts.start)]*(expM^i)*expMhalf*P4*Scale*Beta*n.res[i+(ts.P4-ts.start)]*(nstep[i+(ts.P4-ts.start)]^(Beta-1));
+                           grlogP4s[i] <- effeff[i]*exp(-M*(i-(ts.P4-ts.start+1))-M/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P4    <- -(sum(ind.P4)-2)*sum(grP4s)/sum(n.res[(ts.P4-ts.start+1):sealen]^2);
-                       grad.Scale <- -(sealen-2)*Scale*expMhalf*sum(effeff*effn*n.res)/totlik;
-                       grad.Alpha <- -(sealen-2)*Scale*Alpha*expMhalf*sum(effeff*effn*ifelse(obseff==0,0,log(obseff))*n.res)/totlik;
-                       grad.Beta  <- -(sealen-2)*Scale*Beta*expMhalf*sum(effeff*effn*log(nstep)*n.res)/totlik;
+                       grad.logP4    <- -((sum(ind.P4)-2)*sum(grlogP4s))/sum(n.res[(ts.P4-ts.start+1):sealen]^2);
+                       grad.logscale <- -((sealen-2)*exp(logscale-M/2)*sum(effeff*effn*n.res))/totlik;
+                       grad.logalpha <- -((sealen-2)*exp(-M/2+logscale+logalpha)*sum(effeff*effn*log(obseff)*n.res))/totlik;
+                       grad.logbeta  <- -((sealen-2)*exp(-M/2+logscale+logbeta)*sum(effeff*effn*log(nstep)*n.res))/totlik;
                        }
                     else
                        {
                        totlik        <- sum(ln.res^2);
                        for(i in 1:sealen)
                            {
-                           grN0s[i] <- N0*Beta*(expM^i)*ln.res[i]/nstep[i];
+                           grlogN0s[i] <- exp(-i*M+logN0+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.N0    <- -(sealen-2)*sum(grN0s)/totlik;
-                       for(i in 1:(ts.end-ts.P1+1))
+                       grad.logN0    <- -((sealen-2)*sum(grlogN0s))/totlik;
+                       for(i in (ts.P1-ts.start+1):sealen)
                            {
-                           grP1s[i] <- P1*Beta*(expM^i)*ln.res[i+(ts.P1-ts.start)]/nstep[i+(ts.P1-ts.start)];
+                           grlogP1s[i] <- exp(-M*(i-(ts.P1-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P1    <- -(sum(ind.P1)-2)*sum(grP1s)/sum(ln.res[(ts.P1-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P2+1))
+                       grad.logP1    <- -((sum(ind.P1)-2)*sum(grlogP1s))/sum(ln.res[(ts.P1-ts.start+1):sealen]^2);
+                       for(i in (ts.P2-ts.start+1):sealen)
                            {
-                           grP2s[i] <- P2*Beta*(expM^i)*ln.res[i+(ts.P2-ts.start)]/nstep[i+(ts.P2-ts.start)];
+                           grlogP2s[i] <- exp(-M*(i-(ts.P2-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P2    <- -(sum(ind.P2)-2)*sum(grP2s)/sum(ln.res[(ts.P2-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P3+1))
+                       grad.logP2    <- -((sum(ind.P2)-2)*sum(grlogP2s))/sum(ln.res[(ts.P2-ts.start+1):sealen]^2);
+                       for(i in (ts.P3-ts.start+1):sealen)
                            {
-                           grP3s[i] <- P3*Beta*(expM^i)*ln.res[i+(ts.P3-ts.start)]/nstep[i+(ts.P3-ts.start)];
+                           grlogP3s[i] <- exp(-M*(i-(ts.P3-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P3    <- -(sum(ind.P3)-2)*sum(grP3s)/sum(ln.res[(ts.P3-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P4+1))
+                       grad.logP3    <- -((sum(ind.P3)-2)*sum(grlogP3s))/sum(ln.res[(ts.P3-ts.start+1):sealen]^2);
+                       for(i in (ts.P4-ts.start+1):sealen)
                            {
-                           grP4s[i] <- P4*Beta*(expM^i)*ln.res[i+(ts.P4-ts.start)]/nstep[i+(ts.P4-ts.start)];
+                           grlogP4s[i] <- exp(-M*(i-(ts.P4-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P4    <- -(sum(ind.P4)-2)*sum(grP4s)/sum(ln.res[(ts.P4-ts.start+1):sealen]^2);
-                       grad.Scale <- -(sealen-2)*sum(ln.res)/totlik;
-                       grad.Alpha <- -(sealen-2)*Alpha*sum(ifelse(obseff==0,0,log(obseff))*ln.res)/totlik;
-                       grad.Beta  <- -(sealen-2)*Beta*sum(log(nstep)*ln.res)/totlik;
+                       grad.logP4    <- -((sum(ind.P4)-2)*sum(grlogP4s))/sum(ln.res[(ts.P4-ts.start+1):sealen]^2);
+                       grad.logscale <- -((sealen-2)*sum(ln.res))/totlik;
+                       grad.logalpha <- -((sealen-2)*exp(logalpha)*sum(log(obseff)*ln.res))/totlik;
+                       grad.logbeta  <- -((sealen-2)*exp(logbeta)*sum(log(nstep)*ln.res))/totlik;
                        }
-                    grad       <- c(grad.N0,grad.P1,grad.P2,grad.P3,grad.P4,grad.Scale,grad.Alpha,grad.Beta)
+                    grad       <- c(grad.logN0,grad.logP1,grad.logP2,grad.logP3,grad.logP4,grad.logscale,grad.logalpha,grad.logbeta)
                     }
                   else
                     {
-                    M         <- exp(par[1]);
-                    N0        <- exp(par[2]);
-                    P1        <- exp(par[3]);
-                    P2        <- exp(par[4]);
-                    P3        <- exp(par[5]);
-                    P4        <- exp(par[6]);
-                    Scale     <- exp(par[7]);
-                    Alpha     <- exp(par[8]);
-                    Beta      <- exp(par[9]);
-                    expM      <- exp(-M);
-                    expMhalf  <- exp(-M/2);
+                    logM      <- par[1];
+                    logN0     <- par[2];
+                    logP1     <- par[3];
+                    logP2     <- par[4];
+                    logP3     <- par[5];
+                    logP4     <- par[6];
+                    logscale  <- par[7];
+                    logalpha  <- par[8];
+                    logbeta   <- par[9];
                     mccumgrad1 <- vector("numeric",sealen);
                     mccumgrad2 <- vector("numeric",sealen);
                     mccumgfact <- vector("numeric",sealen);
                     mccum[1]   <- 0;
-                    nstep[1]   <- N0*expM;
+                    nstep[1]   <- exp(logN0)*exp(-exp(logM));
                     for(i in 2:sealen)
                       {
-                      mccum[i] <- obscat[i-1] + mccum[i-1]*expM;
-                      nstep[i] <- N0*(expM^i) +
-                                  ind.P1[i]*P1*expM^(i-(ts.P1-ts.start)+1) +
-                                  ind.P2[i]*P2*expM^(i-(ts.P2-ts.start)+1) +
-                                  ind.P3[i]*P3*expM^(i-(ts.P3-ts.start)+1) +
-                                  ind.P4[i]*P4*expM^(i-(ts.P4-ts.start)+1) -
-                                  mccum[i]*expMhalf;
+                      mccum[i] <- obscat[i-1] + mccum[i-1]*exp(-exp(logM));
+                      nstep[i] <- exp(logN0)*exp(-exp(logM)*i) +
+                                  ind.P1[i]*exp(logP1)*exp(-exp(logM)*(i-(ts.P1-ts.start)+1)) +
+                                  ind.P2[i]*exp(logP2)*exp(-exp(logM)*(i-(ts.P2-ts.start)+1)) +
+                                  ind.P3[i]*exp(logP3)*exp(-exp(logM)*(i-(ts.P3-ts.start)+1)) +
+                                  ind.P4[i]*exp(logP4)*exp(-exp(logM)*(i-(ts.P4-ts.start)+1)) -
+                                  mccum[i]*exp(-exp(logM)/2);
                       }
-                    effeff     <- obseff^Alpha;
-                    effn       <- nstep^Beta;
-                    predcat    <- Scale*(effeff*effn)*expMhalf;
+                    effeff     <- obseff^(exp(logalpha));
+                    effn       <- nstep^(exp(logbeta));
+                    predcat    <- exp(logscale)*(effeff*effn)*exp(-exp(logM)/2);
                     n.res      <- obscat-predcat;
                     ln.res     <- ifelse(obscat==0 | predcat==0,0,log(obscat)-log(predcat));
                     if(distr=='normal')
@@ -161,171 +157,170 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                        totlik        <- sum(n.res^2);
                        mccumgrad1[1] <- 0;
                        mccumgrad2[2] <- 0;
-                       mccumgfact[1] <- -M*N0*expM;
-                       grMs[1]       <- n.res[1]*(M*predcat[1]/2-effeff[1]*Scale*Beta*expMhalf*(nstep[1]^(Beta-1))*mccumgfact[1]);
+                       mccumgfact[1] <- exp(logN0-exp(logM)+logM);
+                       grlogMs[1]    <- n.res[1]*(exp(logM)*predcat[1]/2-effeff[1]*exp(logbeta+logscale-exp(logM)/2)*nstep[1]^(exp(logbeta)-1)*mccumgfact[1]);
                        for(i in 2:sealen)
                           {
-                          mccumgrad1[i]  <- obscat[i-1]+(i-1)*mccumgrad1[i-1]*M*expM^(i-1);
-                          mccumgrad1[i]  <- mccumgrad1[i]*expMhalf;
-                          mccumgrad2[i]  <- obscat[i-1] + mccumgrad2[i-1]*expM;
-                          mccumgrad2[i]  <- mccumgrad2[i]*(1/2)*M*expMhalf;
-                          if(i<=(ts.P1-ts.start+1))
+                          mccumgrad1[i]  <- obscat[i-1]+(i-1)*mccumgrad1[i-1]*exp(logM-(i-1)*exp(logM));
+                          mccumgrad1[i]  <- mccumgrad1[i]*exp(-exp(logM)/2);
+                          mccumgrad2[i]  <- obscat[i-1] + mccumgrad2[i-1]*exp(-exp(logM));
+                          mccumgrad2[i]  <- mccumgrad2[i]*(1/2)*exp(logM-exp(logM)/2);
+                          if(i<=ts.P1)
                              {
-                              mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i);
+                              mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM);
                              }
                           else
                              {
-                              if(i<=(ts.P2-ts.start+1))
+                              if(i<=ts.P2)
                                  {
-                                  mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                   - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1));
+                                  mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                   - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1;
                                  }
                               else
                                  {
-                                  if(i<=(ts.P3-ts.start+1))
+                                  if(i<=ts.P3)
                                      {
-                                      mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                       - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1))
-                                                       - (i-(ts.P2-ts.start+1))*P2*M*expM^(i-(ts.P2-ts.start+1));
+                                      mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                       - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1
+                                                       - (i-ts.P2)*exp(logM-(i-ts.P2)*exp(logM))*logP2;
                                      }
                                   else
                                      {
-                                      if(i<=(ts.P4-ts.start+1))
+                                      if(i<=ts.P4)
                                          {
-                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                           - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1))
-                                                           - (i-(ts.P2-ts.start+1))*P2*M*expM^(i-(ts.P2-ts.start+1))
-                                                           - (i-(ts.P3-ts.start+1))*P3*M*expM^(i-(ts.P3-ts.start+1));
+                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                           - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1
+                                                           - (i-ts.P2)*exp(logM-(i-ts.P2)*exp(logM))*logP2
+                                                           - (i-ts.P3)*exp(logM-(i-ts.P3)*exp(logM))*logP3;
                                          }
                                       else
                                          {
-                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                           - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1))
-                                                           - (i-(ts.P2-ts.start+1))*P2*M*expM^(i-(ts.P2-ts.start+1))
-                                                           - (i-(ts.P3-ts.start+1))*P3*M*expM^(i-(ts.P3-ts.start+1))
-                                                           - (i-(ts.P4-ts.start+1))*P4*M*expM^(i-(ts.P4-ts.start+1));
+                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                           - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1
+                                                           - (i-ts.P2)*exp(logM-(i-ts.P2)*exp(logM))*logP2
+                                                           - (i-ts.P3)*exp(logM-(i-ts.P3)*exp(logM))*logP3
+                                                           - (i-ts.P4)*exp(logM-(i-ts.P4)*exp(logM))*logP4;
                                          }
                                      }
                                  }
                              }
-                          grMs[i]    <- n.res[i]*(M*predcat[i]/2-effeff[i]*Beta*Scale*expMhalf*(nstep[i]^(Beta-1))*mccumgfact[i]);
+                          grlogMs[i]    <- n.res[i]*(exp(logM)*predcat[i]/2-effeff[i]*exp(logbeta+logscale-exp(logM)/2)*nstep[i]^(exp(logbeta)-1)*mccumgfact[i]);
                           }
-                       grad.M     <-  (sealen-2)*sum(grMs)/totlik;
+                       grad.logM     <-  (sealen-2)*sum(grlogMs)/totlik;
                        for(i in 1:sealen)
+                          {
+                          grlogN0s[i] <- effeff[i]*exp(-i*exp(logM)-exp(logM)/2+logN0+logscale+logbeta)*n.res[i]*(nstep[i]^(exp(logbeta)-1));
+                          }
+                       grad.logN0    <- -((sealen-2)*sum(grlogN0s))/totlik;
+                       for(i in (ts.P1-ts.start+1):sealen)
                            {
-                           grN0s[i] <- effeff[i]*(expM^i)*expMhalf*N0*Scale*Beta*n.res[i]*(nstep[i]^(Beta-1));
+                           grlogP1s[i] <- effeff[i]*exp(-exp(logM)*(i-(ts.P1-ts.start+1))-exp(logM)/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.N0    <- -(sealen-2)*sum(grN0s)/totlik;
-                       for(i in 1:(ts.end-ts.P1+1))
+                       grad.logP1    <- -((sum(ind.P1)-2)*sum(grlogP1s))/sum(n.res[(ts.P1-ts.start+1):sealen]^2);
+                       for(i in (ts.P2-ts.start+1):sealen)
                            {
-                           grP1s[i] <- effeff[i+(ts.P1-ts.start)]*(expM^i)*expMhalf*P1*Scale*Beta*n.res[i+(ts.P1-ts.start)]*(nstep[i+(ts.P1-ts.start)]^(Beta-1));
+                           grlogP2s[i] <- effeff[i]*exp(-exp(logM)*(i-(ts.P2-ts.start+1))-exp(logM)/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P1    <- -(sum(ind.P1)-2)*sum(grP1s)/sum(n.res[(ts.P1-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P2+1))
+                       grad.logP2    <- -((sum(ind.P2)-2)*sum(grlogP2s))/sum(n.res[(ts.P2-ts.start+1):sealen]^2);
+                       for(i in (ts.P3-ts.start+1):sealen)
                            {
-                           grP2s[i] <- effeff[i+(ts.P2-ts.start)]*(expM^i)*expMhalf*P2*Scale*Beta*n.res[i+(ts.P2-ts.start)]*(nstep[i+(ts.P2-ts.start)]^(Beta-1));
+                           grlogP3s[i] <- effeff[i]*exp(-exp(logM)*(i-(ts.P3-ts.start+1))-exp(logM)/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P2    <- -(sum(ind.P2)-2)*sum(grP2s)/sum(n.res[(ts.P2-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P3+1))
+                       grad.logP3    <- -((sum(ind.P3)-2)*sum(grlogP3s))/sum(n.res[(ts.P3-ts.start+1):sealen]^2);
+                       for(i in (ts.P4-ts.start+1):sealen)
                            {
-                           grP3s[i] <- effeff[i+(ts.P3-ts.start)]*(expM^i)*expMhalf*P3*Scale*Beta*n.res[i+(ts.P3-ts.start)]*(nstep[i+(ts.P3-ts.start)]^(Beta-1));
+                           grlogP4s[i] <- effeff[i]*exp(-exp(logM)*(i-(ts.P4-ts.start+1))-exp(logM)/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*n.res[i];
                            }
-                       grad.P3    <- -(sum(ind.P3)-2)*sum(grP3s)/sum(n.res[(ts.P3-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P4+1))
-                           {
-                           grP4s[i] <- effeff[i+(ts.P4-ts.start)]*(expM^i)*expMhalf*P4*Scale*Beta*n.res[i+(ts.P4-ts.start)]*(nstep[i+(ts.P4-ts.start)]^(Beta-1));
-                           }
-                       grad.P4    <- -(sum(ind.P4)-2)*sum(grP4s)/sum(n.res[(ts.P4-ts.start+1):sealen]^2);
-                       grad.Scale <- -(sealen-2)*Scale*expMhalf*sum(effeff*effn*n.res)/totlik;
-                       grad.Alpha <- -(sealen-2)*Scale*Alpha*expMhalf*sum(effeff*effn*ifelse(obseff==0,0,log(obseff))*n.res)/totlik;
-                       grad.Beta  <- -(sealen-2)*Scale*Beta*expMhalf*sum(effeff*effn*log(nstep)*n.res)/totlik;
+                       grad.logP4    <- -((sum(ind.P4)-2)*sum(grlogP4s))/sum(n.res[(ts.P4-ts.start+1):sealen]^2);
+                       grad.logscale <- -((sealen-2)*exp(logscale-exp(logM)/2)*sum(effeff*effn*n.res))/totlik;
+                       grad.logalpha <- -((sealen-2)*exp(-exp(logM)/2+logscale+logalpha)*sum(effeff*effn*log(obseff)*n.res))/totlik;
+                       grad.logbeta  <- -((sealen-2)*exp(-exp(logM)/2+logscale+logbeta)*sum(effeff*effn*log(nstep)*n.res))/totlik;
                        }
                     else
                        {
                        totlik        <- sum(ln.res^2);
                        mccumgrad1[1] <- 0;
                        mccumgrad2[1] <- 0;
-                       mccumgfact[1] <- -M*N0*expM;
-                       grMs[1]       <- ln.res[1]*(effeff[1]*Scale*Beta*expMhalf*(nstep[1]^(Beta-1))*mccumgfact[1]-M*predcat[1]/2)/(effeff[1]*effn[1]);
+                       mccumgfact[1] <- exp(logN0-exp(logM)+logM);
+                       grlogMs[1]    <- ln.res[1]*(effeff[1]*exp(-exp(logM)/2+logscale+logbeta)*nstep[1]^(exp(logbeta)-1)*mccumgfact[1]-exp(logM)*predcat[1]/2)/(effeff[1]*nstep[1]);
                        for(i in 2:sealen)
                           {
-                          mccumgrad1[i]  <- obscat[i-1]+(i-1)*mccumgrad1[i-1]*M*expM^(i-1);
-                          mccumgrad1[i]  <- mccumgrad1[i]*expMhalf;
-                          mccumgrad2[i]  <- obscat[i-1] + mccumgrad2[i-1]*expM;
-                          mccumgrad2[i]  <- mccumgrad2[i]*(1/2)*M*expMhalf;
-                          if(i<=(ts.P1-ts.start+1))
+                          mccumgrad1[i]  <- obscat[i-1]+(i-1)*mccumgrad1[i-1]*exp(logM-(i-1)*exp(logM));
+                          mccumgrad1[i]  <- mccumgrad1[i]*exp(-exp(logM)/2);
+                          mccumgrad2[i]  <- obscat[i-1] + mccumgrad2[i-1]*exp(-exp(logM));
+                          mccumgrad2[i]  <- mccumgrad2[i]*(1/2)*exp(logM-exp(logM)/2);
+                          if(i<=ts.P1)
                              {
-                              mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i);
+                              mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM);
                              }
                           else
                              {
-                              if(i<=(ts.P2-ts.start+1))
+                              if(i<=ts.P2)
                                  {
-                                  mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                   - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1));
+                                  mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                   - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1;
                                  }
                               else
                                  {
-                                  if(i<=(ts.P3-ts.start+1))
+                                  if(i<=ts.P3)
                                      {
-                                      mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                       - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1))
-                                                       - (i-(ts.P2-ts.start+1))*P2*M*expM^(i-(ts.P2-ts.start+1));
+                                      mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                       - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1
+                                                       - (i-ts.P2)*exp(logM-(i-ts.P2)*exp(logM))*logP2;
                                      }
                                   else
                                      {
-                                      if(i<=(ts.P4-ts.start+1))
+                                      if(i<=ts.P4)
                                          {
-                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                           - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1))
-                                                           - (i-(ts.P2-ts.start+1))*P2*M*expM^(i-(ts.P2-ts.start+1))
-                                                           - (i-(ts.P3-ts.start+1))*P3*M*expM^(i-(ts.P3-ts.start+1));
+                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                           - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1
+                                                           - (i-ts.P2)*exp(logM-(i-ts.P2)*exp(logM))*logP2
+                                                           - (i-ts.P3)*exp(logM-(i-ts.P3)*exp(logM))*logP3;
                                          }
                                       else
                                          {
-                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*N0*M*(expM^i)
-                                                           - (i-(ts.P1-ts.start+1))*P1*M*expM^(i-(ts.P1-ts.start+1))
-                                                           - (i-(ts.P2-ts.start+1))*P2*M*expM^(i-(ts.P2-ts.start+1))
-                                                           - (i-(ts.P3-ts.start+1))*P3*M*expM^(i-(ts.P3-ts.start+1))
-                                                           - (i-(ts.P4-ts.start+1))*P4*M*expM^(i-(ts.P4-ts.start+1));
+                                          mccumgfact[i] <- mccumgrad1[i] + mccumgrad2[i] - i*exp(logN0-i*exp(logM)+logM)
+                                                           - (i-ts.P1)*exp(logM-(i-ts.P1)*exp(logM))*logP1
+                                                           - (i-ts.P2)*exp(logM-(i-ts.P2)*exp(logM))*logP2
+                                                           - (i-ts.P3)*exp(logM-(i-ts.P3)*exp(logM))*logP3
+                                                           - (i-ts.P4)*exp(logM-(i-ts.P4)*exp(logM))*logP4;
                                          }
                                      }
                                  }
                              }
-                          grMs[i]    <- ln.res[i]*(effeff[i]*Scale*Beta*expMhalf*(nstep[i]^(Beta-1))*mccumgfact[i]-M*predcat[i]/2)/(effeff[i]*effn[i]);
+                          grlogMs[i]    <- ln.res[i]*(effeff[i]*exp(-exp(logM)/2+logscale+logbeta)*nstep[i]^(exp(logbeta)-1)*mccumgfact[i]-exp(logM)*predcat[i]/2)/(effeff[i]*nstep[i]);
                           }
-                       grad.M     <- -((sealen-2))*(1/Scale*expMhalf)*sum(grMs,na.rm=TRUE)/totlik;
+                       grad.logM     <- -((sealen-2))*exp(exp(logM)/2-logscale)*sum(grlogMs)/totlik;
                        for(i in 1:sealen)
                            {
-                           grN0s[i] <- N0*Beta*(expM^i)*ln.res[i]/nstep[i];
+                           grlogN0s[i] <- exp(-i*exp(logM)+logN0+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.N0    <- -(sealen-2)*sum(grN0s)/totlik;
-                       for(i in 1:(ts.end-ts.P1+1))
+                       grad.logN0    <- -((sealen-2)*sum(grlogN0s))/totlik;
+                       for(i in (ts.P1-ts.start+1):sealen)
                            {
-                           grP1s[i] <- P1*Beta*(expM^i)*ln.res[i+(ts.P1-ts.start)]/nstep[i+(ts.P1-ts.start)];
+                           grlogP1s[i] <- exp(-exp(logM)*(i-(ts.P1-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P1    <- -(sum(ind.P1)-2)*sum(grP1s)/sum(ln.res[(ts.P1-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P2+1))
+                       grad.logP1    <- -((sum(ind.P1)-2)*sum(grlogP1s))/sum(ln.res[(ts.P1-ts.start+1):sealen]^2);
+                       for(i in (ts.P2-ts.start+1):sealen)
                            {
-                           grP2s[i] <- P2*Beta*(expM^i)*ln.res[i+(ts.P2-ts.start)]/nstep[i+(ts.P2-ts.start)];
+                           grlogP2s[i] <- exp(-exp(logM)*(i-(ts.P2-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P2    <- -(sum(ind.P2)-2)*sum(grP2s)/sum(ln.res[(ts.P2-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P3+1))
+                       grad.logP2    <- -((sum(ind.P2)-2)*sum(grlogP2s))/sum(ln.res[(ts.P2-ts.start+1):sealen]^2);
+                       for(i in (ts.P3-ts.start+1):sealen)
                            {
-                           grP3s[i] <- P3*Beta*(expM^i)*ln.res[i+(ts.P3-ts.start)]/nstep[i+(ts.P3-ts.start)];
+                           grlogP3s[i] <- exp(-exp(logM)*(i-(ts.P3-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P3    <- -(sum(ind.P3)-2)*sum(grP3s)/sum(ln.res[(ts.P3-ts.start+1):sealen]^2);
-                       for(i in 1:(ts.end-ts.P4+1))
+                       grad.logP3    <- -((sum(ind.P3)-2)*sum(grlogP3s))/sum(ln.res[(ts.P3-ts.start+1):sealen]^2);
+                       for(i in (ts.P4-ts.start+1):sealen)
                            {
-                           grP4s[i] <- P4*Beta*(expM^i)*ln.res[i+(ts.P4-ts.start)]/nstep[i+(ts.P4-ts.start)];
+                           grlogP4s[i] <- exp(-exp(logM)*(i-(ts.P4-ts.start+1))+logbeta)*ln.res[i]/nstep[i];
                            }
-                       grad.P4    <- -(sum(ind.P4)-2)*sum(grP4s)/sum(ln.res[(ts.P4-ts.start+1):sealen]^2);
-                       grad.Scale <- -(sealen-2)*sum(ln.res)/totlik;
-                       grad.Alpha <- -(sealen-2)*Alpha*sum(ifelse(obseff==0,0,log(obseff))*ln.res)/totlik;
-                       grad.Beta  <- -(sealen-2)*Beta*sum(log(nstep)*ln.res)/totlik;
+                       grad.logP4    <- -((sum(ind.P4)-2)*sum(grlogP4s))/sum(ln.res[(ts.P4-ts.start+1):sealen]^2);
+                       grad.logscale <- -((sealen-2)*sum(ln.res))/totlik;
+                       grad.logalpha <- -((sealen-2)*exp(logalpha)*sum(log(obseff)*ln.res))/totlik;
+                       grad.logbeta  <- -((sealen-2)*exp(logbeta)*sum(log(nstep)*ln.res))/totlik;
                        }
-                    grad       <- c(grad.M,grad.N0,grad.P1,grad.P2,grad.P3,grad.P4,grad.Scale,grad.Alpha,grad.Beta)
+                    grad       <- c(grad.logM,grad.logN0,grad.logP1,grad.logP2,grad.logP3,grad.logP4,grad.logscale,grad.logalpha,grad.logbeta)
                     }
                   grad <- grad;
  }
-

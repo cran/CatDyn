@@ -173,17 +173,17 @@ function(x,tstep,mult,unit1,unit2,bmunit,span,top.text,hem,...)
          abline(v=354,col='blue')
          }
        }
-     plot(x=x$period,y=x$obsmbm,xlab=tstep,ylab=paste("Mean Body Mass (",bmunit,")",sep=""),axes=FALSE)
+     plot(x=x$period,y=x$mn.wt,xlab=tstep,ylab=paste("Mean Body Mass (",bmunit,")",sep=""),axes=FALSE)
      axis(side=1,at=seq(head(x$period,1),tail(x$period,1),1))
      axis(side=2,at=NULL)
      if(hem=="N")
        {
        if(tstep=="Week")
          {
-         text(x=12+2,y=0.9*max(x$obsmbm),lab="Spring",col='blue')
-         text(x=25+2,y=0.9*max(x$obsmbm),lab="Summer",col='blue')
-         text(x=38+2,y=0.9*max(x$obsmbm),lab="Fall",col='blue')
-         text(x=51+2,y=0.9*max(x$obsmbm),lab="Winter",col='blue')
+         text(x=12+2,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
+         text(x=25+2,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
+         text(x=38+2,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
+         text(x=51+2,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
          abline(v=12,col='blue')
          abline(v=25,col='blue')
          abline(v=38,col='blue')
@@ -191,10 +191,10 @@ function(x,tstep,mult,unit1,unit2,bmunit,span,top.text,hem,...)
          }
        else
          {
-         text(x=079+10,y=0.9*max(x$obsmbm),lab="Spring",col='blue')
-         text(x=171+10,y=0.9*max(x$obsmbm),lab="Summer",col='blue')
-         text(x=263+10,y=0.9*max(x$obsmbm),lab="Fall",col='blue')
-         text(x=354+10,y=0.9*max(x$obsmbm),lab="Winter",col='blue')
+         text(x=079+10,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
+         text(x=171+10,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
+         text(x=263+10,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
+         text(x=354+10,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
          abline(v=079,col='blue')
          abline(v=171,col='blue')
          abline(v=263,col='blue')
@@ -205,10 +205,10 @@ function(x,tstep,mult,unit1,unit2,bmunit,span,top.text,hem,...)
        {
        if(tstep=="Week")
          {
-         text(x=12+2,y=0.9*max(x$obsmbm),lab="Fall",col='blue')
-         text(x=25+2,y=0.9*max(x$obsmbm),lab="Winter",col='blue')
-         text(x=38+2,y=0.9*max(x$obsmbm),lab="Spring",col='blue')
-         text(x=51+2,y=0.9*max(x$obsmbm),lab="Summer",col='blue')
+         text(x=12+2,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
+         text(x=25+2,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
+         text(x=38+2,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
+         text(x=51+2,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
          abline(v=12,col='blue')
          abline(v=25,col='blue')
          abline(v=38,col='blue')
@@ -216,10 +216,10 @@ function(x,tstep,mult,unit1,unit2,bmunit,span,top.text,hem,...)
          }
        else
          {
-         text(x=079+10,y=0.9*max(x$obsmbm),lab="Fall",col='blue')
-         text(x=171+10,y=0.9*max(x$obsmbm),lab="Winter",col='blue')
-         text(x=263+10,y=0.9*max(x$obsmbm),lab="Spring",col='blue')
-         text(x=354+10,y=0.9*max(x$obsmbm),lab="Summer",col='blue')
+         text(x=079+10,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
+         text(x=171+10,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
+         text(x=263+10,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
+         text(x=354+10,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
          abline(v=079,col='blue')
          abline(v=171,col='blue')
          abline(v=263,col='blue')
@@ -229,4 +229,3 @@ function(x,tstep,mult,unit1,unit2,bmunit,span,top.text,hem,...)
      mtext(side=3,outer=TRUE,text=top.text)
      options(warn=0)
     }
-

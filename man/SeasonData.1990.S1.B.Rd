@@ -2,7 +2,7 @@
 \alias{SeasonData.1990.S1.B}
 \docType{data}
 \title{
-Processed Data to Fit Catch Dynamic Models
+Processed Data to Fit Catch Dynamics Models
 }
 \description{
 Daily step, catch in billions, two measures of effort, and the mean body mass series corresponding to the summer fishing season

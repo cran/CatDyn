@@ -1,20 +1,19 @@
 \name{CDMN3P}
 \alias{CDMN3P}
 \title{
-Implementing a 3-Perturbations Catch Dynamic Model to Examine Parameter Values
+Implementing a 3-Perturbations Catch Dynamics Model to Examine Parameter Values
 }
 \description{
 This function will do exactly the same as its homonym CDMN3P.Lik, except that instead
-of producing an evaluated approximation to the likelihood, it outputs an object of
-class CatDynMod, a data.frame with several results of interest for model checking
-with graphical methods.
+of producing an evaluated approximation to the likelihood, it outputs a data.frame
+with several results of interest.
 }
 \usage{
 CDMN3P(par, dates, obscat, obseff, obsmbm, M.fixed, M, distr)
 }
 \arguments{
   \item{par}{
-A numeric vector of length 8 with initial parameter values in the log scale
+A numeric vector of length 8 with initial parameter values in the log scale.
 }
   \item{dates}{
 An integer vector of length 5 with initial time step, perturbation time steps, and final time step.
@@ -32,24 +31,23 @@ A numeric vector with observed mean body mass by time step.
 Logical, shall natural be estimated (M.fixed=FALSE) or remain fixed at a given value?
 }
   \item{M}{
-If M.fixed is TRUE, this number sets the value of the natural mortality rate.
+A positive number or NULL; if M.fixed is TRUE, this number sets the value of the natural mortality rate.
 }
   \item{distr}{
-Character. 'normal' or 'lognormal' model for the observed random variable, the catch.
+Character, 'normal' or 'lognormal' model for the observed random variable, the catch.
 }
 }
 \details{
 Parameter values are to be in log scale.
-The output data.frame consists of the following columns in the given order:
+}
+\value{
+A data.frame, an object of class CatDynMod, with the following columns:
 the period, the sequence of time steps defining the season,
 the observed effort,
 the observed catch, in billions,
 the model predicted catch, in billions,
 the residuals,
 the biomass in tonnes.
-}
-\value{
-A data.frame, an object of class CatDynMod. See Details.
 }
 \author{
 Ruben H. Roa-Ureta

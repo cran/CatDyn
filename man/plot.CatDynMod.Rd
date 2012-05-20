@@ -1,7 +1,7 @@
 \name{plot.CatDynMod}
 \alias{plot.CatDynMod}
 \title{
-Examining Model Predictions of Catch Dynamic Models on a Graphical Display
+Examining Model Predictions of Catch Dynamics Models on a Graphical Display
 }
 \description{
 A four-panel plot showing the relation between catch model prediction and observed catch. The top-left panel shows catch data,
@@ -10,21 +10,21 @@ mid, or the end of the seasons. The top-right panel is a histogram of residuals.
 The bottom-right panel is a Q-Q normal plot of residuals.
 }
 \usage{
-plot.CatDynMod(x, tstep, mult, Biom, AIC, top.text, leg.pos, AIC.xpos,
-               AIC.ypos, Biom.tstep, Biom.xpos, Biom.ypos, p.dates, ...)
+  \method{plot}{CatDynMod}(x, tstep, mult, Biom, AIC, top.text, leg.pos, AIC.xpos,
+               AIC.ypos, Biom.tstep, Biom.xpos, Biom.ypos, p.dates, \dots)
 }
 \arguments{
   \item{x}{
 A data.frame, an object of class CatDynMod.
 }
   \item{tstep}{
-Character, the chosen time step (should be days or weeks)
+Character, the chosen time step (should be days or weeks).
 }
   \item{mult}{
 Character, the abundance multiplier.
 }
   \item{Biom}{
-Character, either the biomass at the start, at mid, or at the end of the season, or 'Collapse' (Abundance goes to zero)
+Character, either the biomass at the start, at mid, or at the end of the season, or 'Collapse' (Abundance goes to zero).
 }
   \item{AIC}{
 The AIC of the model.
@@ -33,7 +33,7 @@ The AIC of the model.
 Character, a descriptive sentence.
 }
   \item{leg.pos}{
-Character, any of the choices for position of legend()
+Character, any of the choices for position of function legend.
 }
   \item{AIC.xpos}{
 Number, the position of the AIC value along the x-axis. 0 suppresses the text.

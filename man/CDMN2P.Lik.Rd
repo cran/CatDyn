@@ -1,7 +1,7 @@
 \name{CDMN2P.Lik}
 \alias{CDMN2P.Lik}
 \title{
-Likelihood Evaluation of 2-Perturbations Catch Dynamic Model
+Likelihood Evaluation of 2-Perturbations Catch Dynamics Model
 }
 \description{
 This function evaluates a modified profile likelihood approximation to the likelihood
@@ -12,7 +12,7 @@ CDMN2P.Lik(par, dates, obscat, obseff, M.fixed, M, distr)
 }
 \arguments{
   \item{par}{
-A numeric vector of length 7 initial parameter values in the log scale
+A numeric vector of length 7 initial parameter values in the log scale.
 }
   \item{dates}{
 An integer vector of length 4 with initial time step, perturbation time steps, and final time step.
@@ -27,10 +27,10 @@ A numeric vector with observed daily nominal effort by time step.
 Logical, shall natural be estimated (M.fixed=FALSE) or remain fixed at a given value?
 }
   \item{M}{
-If M.fixed is TRUE, this number sets the value of the natural mortality rate.
+A positive number or NULL; if M.fixed is TRUE, this number sets the value of the natural mortality rate.
 }
   \item{distr}{
-Character. 'normal' or 'lognormal' model for the observed random variable, the catch.
+Character, 'normal' or 'lognormal' model for the observed random variable, the catch.
 }
 }
 \details{

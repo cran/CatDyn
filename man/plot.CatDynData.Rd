@@ -7,8 +7,8 @@ Exploratory analysis of catch and effort fisheries data on a graphical display
 A six panel plot of raw catch, effort, and biological sampling per time step.
 }
 \usage{
-plot.CatDynData(x, tstep, mult, unit1, unit2, bmunit, span,
-                top.text, hem, ...)
+  \method{plot}{CatDynData}(x, tstep, mult, unit1, unit2, bmunit, span,
+                top.text, hem, \dots)
 }
 \arguments{
   \item{x}{
@@ -60,7 +60,6 @@ Ruben H. Roa-Ureta
 \examples{
 #Data - 1st Season, Beauchene area, 1990, Loligo gahi fishery in the Falklands
 data(SeasonData.1990.S1.B)
-class(SeasonData.1990.S1.B) <- "CatDynData"
 #Plot
 plot(x=SeasonData.1990.S1.B,
      tstep="Day",

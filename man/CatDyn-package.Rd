@@ -3,36 +3,34 @@
 \alias{CatDyn}
 \docType{package}
 \title{
-Fisheries Stock Assessment by Catch Dynamic Models
+Fisheries Stock Assessment by Catch Dynamics Models
 }
 \description{
 Using high-frequency catch and effort data (e.g. daily) CatDyn implements a type
-of stock assessment models oriented to the operational fishing data. The estimated
+of stock assessment model oriented to the operational fishing data. The estimated
 parameters are in two groups, stock abundance and fishing operation. CatDyn includes
 model versions that assume all the fish were available at the start of the fishing
 season, or that up to 4 waves of recruitment or fleet area expansions occurred
-during the season. CatDyn also includes two hypotheses for the distribution of the
-observed response variable, either additive (normal) or multiplicative (lognormal).
-The variance parameter in the chosen distribution is profiles out, and the profile
-likelihood is adjusted. In CatDyn, the natural mortality rate parameter M can be
-estimated with the other parameters or it can be fixed at a given value, making
-inference on the other parameters conditional on the given fixed M value.
+during the season.
 }
 \details{
 \tabular{ll}{
 Package: \tab CatDyn\cr
 Type: \tab Package\cr
-Version: \tab 1.0-2\cr
-Date: \tab 2011-05-27\cr
+Version: \tab 1.0-4\cr
+Date: \tab 2011-09-22\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }
+Process biological and fisheries high frequency data using MBWpDaypSam.Fk() and
+BioFishpDay.Fk().
+
 Display exploratory plots to select a unit of effort, using
 plot() with methods for class CatDynData.
 
-Pick initial parameter values for one of the five versions of
-the model and check them by using the exploratory plot produced by
-plot() with methods for class CatDynMod.
+Pick initial parameter values for one of the twenty versions of
+the model and check them by using the exploratory plot produced
+by generic function plot with methods for class CatDynMod.
 
 Enter the selected initial parameter values transformed to the
 log scale to the wrapper function catdyn() and fit the data to the model.
@@ -40,7 +38,7 @@ log scale to the wrapper function catdyn() and fit the data to the model.
 Inspect results using plot() on an object of class CatDynMod, using the
 estimated parameter values.
 
-The process equations in the catch Dynamic Models in this package are of the form:
+The process equations in the catch Dynamics Models in this package are of the form:
 
 C_t = k exp(-M/2) E_t^a N_t^b
 
@@ -61,6 +59,11 @@ that accounts for the fish that would have been dead due to natural causes but t
 didn't have a chance because they were caught. This latter process is a discount
 applied to the earlier catches in order to avoid an M-biased estimate of N_0.
 
+The observation model can take any of two forms: an additive random normal term
+added to the catch predicted by the process (normal), or a multiplicative
+exponential term acting on the process-predicted catch such as the logarithm
+of this multiplier distributes normally (lognormal).
+
 }
 \author{
 Ruben H. Roa-Ureta
@@ -69,5 +72,5 @@ Maintainer: Ruben H. Roa-Ureta <ruben.roa.ureta@gmail.com>
 }
 \keyword{ package }
 \examples{
-#See examples in the function man pages, especially catdyn().
+#See examples in the function man pages.
 }

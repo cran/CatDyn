@@ -14,7 +14,7 @@ function(par,dates,obscat,obseff,obsmbm,M.fixed,M,distr)
                   catdynmod <- matrix(0,sealen,6);
                   if(M.fixed==TRUE)
                     {
-                    M         <- M;
+                    M   <- M;
                     logN0     <- par[1];
                     logscale  <- par[2];
                     logalpha  <- par[3];
@@ -73,4 +73,3 @@ function(par,dates,obscat,obseff,obsmbm,M.fixed,M,distr)
                   class(catdynmod) <- "CatDynMod";
                   return(catdynmod);
  }
-

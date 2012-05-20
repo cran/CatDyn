@@ -1,7 +1,7 @@
 \name{CDMN0P}
 \alias{CDMN0P}
 \title{
-Implementing a Pure Depletion Catch Dynamic Model to Examine Parameter Values
+Implementing a Pure Depletion Catch Dynamics Model to Examine Parameter Values
 }
 \description{
 This function will do exactly the same as its homonym CDMN0P.Lik, except that instead
@@ -20,28 +20,29 @@ A numeric vector of length 5 with initial parameter values in the log scale
 An integer vector of length 2 wih initial and final time steps.
 }
   \item{obscat}{
-A numeric vector with observed catch in numbers by time step..
+A numeric vector with observed catch in numbers by time step.
 }
   \item{obseff}{
-A numeric vector with observed nominal effort by time step..
+A numeric vector with observed nominal effort by time step.
 }
   \item{obsmbm}{
-A numeric vector with observed mean body mass in kg by time step..
+A numeric vector with observed mean body mass in kg by time step.
 }
   \item{M.fixed}{
 Logical, shall natural be estimated (M.fixed=FALSE) or remain fixed at a given value?
 }
   \item{M}{
-If M.fixed is TRUE, this number sets the value of the natural mortality rate.
-Not implemented. M.fixed must be FALSE and M will be NULL.
+A positive number or NULL; if M.fixed is TRUE, this number sets the value of the natural mortality rate.
 }
   \item{distr}{
-Character. 'normal' or 'lognormal' model for the observed random variable, the catch.
+Character, 'normal' or 'lognormal' model for the observed random variable, the catch.
 }
 }
 \details{
 Parameter values are to be in log scale.
-The output data.frame consists of the following columns in the given order:
+}
+\value{
+A data.frame, an object of class CatDynMod, with columns:
 the period, the sequence of time steps defining the season,
 the observed effort,
 the observed catch, in billions,
@@ -49,14 +50,11 @@ the model predicted catch, in billions,
 the residuals,
 the biomass in tonnes.
 }
-\value{
-A data.frame, an object of class CatDynMod.
-}
 \author{
 Ruben H. Roa-Ureta
 }
 \note{
-This is used to feed a standard plot for exploratory analysis and model checking.
+Thus is used to feed a standard plot for exploratory analysis and model checking.
 }
 \examples{
 #Data - 1st Season, Beauchene area, 1990, Loligo gahi fishery in the Falklands

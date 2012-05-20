@@ -1,11 +1,11 @@
 \name{CDMN0P.Lik.gr}
 \alias{CDMN0P.Lik.gr}
 \title{
-Calculate Analytical Gradients for the Pure Depletion Model (Beta Testing)
+Calculate Analytical Gradients for the Pure Depletion Model
 }
 \description{
-Given parameter values, the function calculate analytical gradients for each of
-the five dimensions of the objective function of the pure depletion model from
+Given parameter values, the function calculates analytical gradients for each of
+five dimensions of the likelihood function of the pure depletion model from
 formulas obtained using the Maxima Computer Algebra System 5.24.00.
 }
 \usage{
@@ -28,7 +28,7 @@ A numeric vector with observed nominal effort by time step.
 Logical, shall natural be estimated (M.fixed=FALSE) or remain fixed at a given value?
 }
   \item{M}{
-If M.fixed is TRUE, this number sets the value of the natural mortality rate.
+A positive number or NULL; if M.fixed is TRUE, this number sets the value of the natural mortality rate.
 }
   \item{distr}{
 Character, either 'normal' or 'lognormal'.

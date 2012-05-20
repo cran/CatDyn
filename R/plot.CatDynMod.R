@@ -36,4 +36,3 @@ function(x,tstep,mult,Biom,AIC,top.text,leg.pos,AIC.xpos,AIC.ypos,Biom.tstep,Bio
      mtext(side=3,outer=TRUE,text=top.text)
      options(warn=0)
     }
-

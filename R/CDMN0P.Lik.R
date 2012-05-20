@@ -14,22 +14,20 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                     if(M.fixed==TRUE)
                       {
                       M         <- M;
-                      N0        <- exp(par[1]);
-                      Scale     <- exp(par[2]);
-                      Alpha     <- exp(par[3]);
-                      Beta      <- exp(par[4]);
-                      expM      <- exp(-M);
-                      expMhalf  <- exp(-M/2);
+                      logN0     <- par[1];
+                      logscale  <- par[2];
+                      logalpha  <- par[3];
+                      logbeta   <- par[4];
                       mccum[1]  <- 0;
-                      nstep[1]  <- N0*expM;
+                      nstep[1]  <- exp(logN0)*exp(-M);
                       for(i in 2:sealen)
                          {
-                         mccum[i] <- obscat[i-1] + mccum[i-1]*expM;
-                         nstep[i] <- N0*(expM^i) - mccum[i]*expMhalf;
+                         mccum[i] <- obscat[i-1] + mccum[i-1]*exp(-M);
+                         nstep[i] <- exp(logN0)*exp(-M*i) - mccum[i]*exp(-M/2);
                          }
-                      effeff      <- obseff^Alpha;
-                      effn        <- nstep^Beta;
-                      predcat     <- Scale*(effeff*effn)*expMhalf;
+                      effeff      <- obseff^(exp(logalpha));
+                      effn        <- nstep^(exp(logbeta));
+                      predcat     <- exp(logscale)*(effeff*effn)*exp(-M/2);
                       if(distr=='normal')
                         {
                         res        <- obscat-predcat;
@@ -43,23 +41,21 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                       }
                     else 
                       {
-                      M         <- exp(par[1]);
-                      N0        <- exp(par[2]);
-                      Scale     <- exp(par[3]);
-                      Alpha     <- exp(par[4]);
-                      Beta      <- exp(par[5]);
+                      logM      <- par[1];
+                      logN0     <- par[2];
+                      logscale  <- par[3];
+                      logalpha  <- par[4];
+                      logbeta   <- par[5];
                       mccum[1]  <- 0;
-                      expM      <- exp(-M);
-                      expMhalf  <- exp(-M/2);
-                      nstep[1]  <- N0*expM;
+                      nstep[1]  <- exp(logN0)*exp(-exp(logM));
                       for(i in 2:sealen)
                         {
-                        mccum[i] <- obscat[i-1] + mccum[i-1]*expM;
-                        nstep[i] <- N0*(expM^i) - mccum[i]*expMhalf;
+                        mccum[i] <- obscat[i-1] + mccum[i-1]*exp(-exp(logM));
+                        nstep[i] <- exp(logN0)*exp(-exp(logM)*i) - mccum[i]*exp(-exp(logM)/2);
                         }
-                      effeff      <- obseff^Alpha;
-                      effn        <- nstep^Beta;
-                      predcat     <- Scale*(effeff*effn)*expMhalf;
+                      effeff      <- obseff^(exp(logalpha));
+                      effn        <- nstep^(exp(logbeta));
+                      predcat     <- exp(logscale)*(effeff*effn)*exp(-exp(logM)/2);
                       if(distr=='normal')
                         {
                         res        <- obscat-predcat;
@@ -74,4 +70,3 @@ function(par,dates,obscat,obseff,M.fixed,M,distr)
                     negsup <- ((sealen-2)/2)*log(sum(likcontr));
                     return(negsup);
  }
-

@@ -1,10 +1,10 @@
 \name{CDMN4P.Lik.gr}
 \alias{CDMN4P.Lik.gr}
 \title{
-Calculate Analytical Gradients for the 4-Perturbations Model (Beta Testing)
+Calculate Analytical Gradients for the 4-Perturbations Model
 }
 \description{
-Given parameter values, the function calculate analytical gradients for each of
+Given parameter values, the function calculates analytical gradients for each of
 the eight dimensions of the objective function of the 3-Perturbations model from
 formulas obtained using the Maxima Computer Algebra System 5.24.00.
 }
@@ -28,10 +28,10 @@ A numeric vector with observed nominal effort by time step.
 Logical, shall natural be estimated (M.fixed=FALSE) or remain fixed at a given value?
 }
   \item{M}{
-If M.fixed is TRUE, this number sets the value of the natural mortality rate.
+A positive number or NULL; if M.fixed is TRUE, this number sets the value of the natural mortality rate.
 }
   \item{distr}{
-Character, either 'normal' or 'lognormal'.
+Character, either 'normal' or 'lognormal', for the distribution of the response variable, the catch.
 }
 }
 \details{
@@ -45,7 +45,6 @@ Ruben H. Roa-Ureta
 }
 \note{
 Parameter values are to be in log scale for consistency with CDMN4P.Lik.
-Checked against numerical gradients obtained with optimx, method 'spg'.
 }
 \examples{
 #Data - 1st Season, Beauchene area, 1990, Loligo gahi fishery in the Falklands
