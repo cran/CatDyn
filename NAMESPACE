@@ -1,1 +1,6 @@
 exportPattern("^[[:alpha:]]+")
+importFrom(optimx,optimx)
+import(BB)
+S3method(plot,CatDynData)
+S3method(plot,CatDynExp)
+S3method(plot,CatDynMod)

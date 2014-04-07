@@ -1,231 +1,308 @@
 plot.CatDynData <-
-function(x,tstep,mult,unit1,unit2,bmunit,span,top.text,hem,...)
+function(x,mark,offset,hem,...)
     {
      options(warn=-1)
-     par(mfrow=c(3,2),oma=c(2,2,2,1), mar=c(4,4,2,2))
-     plot(x=x$obseff1,y=x$obscat,main="",xlab=paste("Effort (",unit1,")",sep=""),ylab=paste("Catch (",mult,")",sep=""))
-     plot(x=x$obseff2,y=x$obscat,main="",xlab=paste("Effort (",unit2,")",sep=""),ylab=paste("Catch (",mult,")",sep=""))
-     plot(x=x$period,y=x$obseff1,xlab=tstep,ylab=paste("Effort (",unit1,")",sep=""),axes=FALSE)
-     axis(side=1,at=seq(head(x$period,1),tail(x$period,1),1))
-     axis(side=2,at=NULL)
-     obseff1.trend    <- loess(x$obseff1~x$period,span=span)
-     obseff1.pred     <- predict(obseff1.trend)
-     lines(x=x$period,y=obseff1.pred,col="blue",lwd=1)
-     if(hem=="N")
+     if(class(x) != "CatDynData") {stop("Pass and object of class CatDynData as first argument - see the help for as.CatDynData")}
+     fleet.name <- x$Properties$Fleets$Fleet
+     for(i in 1:length(fleet.name))
        {
-       if(tstep=="Week")
+       period <- x$Data[[i]][,1]
+       effort <- x$Data[[i]][,2]
+       catch  <- x$Data[[i]][,5]
+       spike  <- x$Data[[i]][,6] 
+       mbw    <- x$Data[[i]][,4] 
+       tstep  <- x$Properties$Units[1]
+       layout(matrix(c(1,2,3,4,4,4,5,5,5,6,6,6,7,7,7),5,3, byrow = TRUE))
+       par(oma=c(2,2,2,1), mar=c(4,4,2,2))
+       plot(x=effort,y=catch,main="",xlab=paste("Effort (",x$Properties$Fleets[i,"Units"],")",sep=""),ylab=paste("Catch (",x$Properties$Units[4],")",sep="")) 
+       hist(x=catch,main="",xlab=paste("Catch (",x$Properties$Units[4],")",sep=""),ylab="Frequency")
+       hist(x=effort,main="",xlab=paste("Effort (",x$Properties$Fleets[i,"Units"],")",sep=""),ylab="Frequency")
+       plot(x=period,y=effort,xlab=gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", tstep, perl=TRUE),ylab=paste("Effort (",x$Properties$Fleets[i,"Units"],")",sep=""),axes=FALSE, pch=19)
+       if(mark==TRUE)
          {
-         text(x=12+2,y=0.9*max(x$obseff1),lab="Spring",col='blue')
-         text(x=25+2,y=0.9*max(x$obseff1),lab="Summer",col='blue')
-         text(x=38+2,y=0.9*max(x$obseff1),lab="Fall",col='blue')
-         text(x=51+2,y=0.9*max(x$obseff1),lab="Winter",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
+          text(x=period,y=effort+max(effort)/offset[1],labels=period)
+         } 
+       axis(side=1,at=seq(head(period,1),tail(period,1),1))
+       axis(side=2,at=NULL)
+       #obseff.trend    <- loess(effort~period,span=span)
+       #obseff.pred     <- predict(obseff.trend)
+       #lines(x=period,y=obseff.pred,col="blue",lwd=1)
+       if(hem=="N")
+         {
+         if(tstep=="day")
+           {
+           text(x=079+10,y=0.9*max(effort),lab="Spring",col='blue')
+           text(x=171+10,y=0.9*max(effort),lab="Summer",col='blue')
+           text(x=263+10,y=0.9*max(effort),lab="Fall",col='blue')
+           text(x=354+10,y=0.9*max(effort),lab="Winter",col='blue')
+           abline(v=079,col='blue')
+           abline(v=171,col='blue')
+           abline(v=263,col='blue')
+           abline(v=354,col='blue')
+           }
+         else if(tstep=="week")
+           {
+           text(x=12+2,y=0.9*max(effort),lab="Spring",col='blue')
+           text(x=25+2,y=0.9*max(effort),lab="Summer",col='blue')
+           text(x=38+2,y=0.9*max(effort),lab="Fall",col='blue')
+           text(x=51+2,y=0.9*max(effort),lab="Winter",col='blue')
+           abline(v=12,col='blue')
+           abline(v=25,col='blue')
+           abline(v=38,col='blue')
+           abline(v=51,col='blue')
+           }
+         else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(effort),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(effort),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(effort),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(effort),lab="Wn",col='blue')
+           }
          }
        else
          {
-         text(x=079+10,y=0.9*max(x$obseff1),lab="Spring",col='blue')
-         text(x=171+10,y=0.9*max(x$obseff1),lab="Summer",col='blue')
-         text(x=263+10,y=0.9*max(x$obseff1),lab="Fall",col='blue')
-         text(x=354+10,y=0.9*max(x$obseff1),lab="Winter",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
+         if(tstep=="day")
+           {
+           text(x=079+10,y=0.9*max(effort),lab="Fall",col='blue')
+           text(x=171+10,y=0.9*max(effort),lab="Winter",col='blue')
+           text(x=263+10,y=0.9*max(effort),lab="Spring",col='blue')
+           text(x=354+10,y=0.9*max(effort),lab="Summer",col='blue')
+           abline(v=079,col='blue')
+           abline(v=171,col='blue')
+           abline(v=263,col='blue')
+           abline(v=354,col='blue')
+           }
+         else if(tstep=="week")
+           {
+           text(x=12+2,y=0.9*max(effort),lab="Fall",col='blue')
+           text(x=25+2,y=0.9*max(effort),lab="Winter",col='blue')
+           text(x=38+2,y=0.9*max(effort),lab="Spring",col='blue')
+           text(x=51+2,y=0.9*max(effort),lab="Summer",col='blue')
+           abline(v=12,col='blue')
+           abline(v=25,col='blue')
+           abline(v=38,col='blue')
+           abline(v=51,col='blue')
+           }
+         else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(effort),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(effort),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(effort),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(effort),lab="Wn",col='blue')
+           }
          }
-       }
-     else
-       {
-       if(tstep=="Week")
+       plot(x=period,y=catch,main="",xlab=gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", tstep, perl=TRUE),ylab=paste("Catch (",x$Properties$Units[4],")",sep=""),axes=FALSE, pch=19)
+       if(mark==TRUE)
          {
-         text(x=12+2,y=0.9*max(x$obseff1),lab="Fall",col='blue')
-         text(x=25+2,y=0.9*max(x$obseff1),lab="Winter",col='blue')
-         text(x=38+2,y=0.9*max(x$obseff1),lab="Spring",col='blue')
-         text(x=51+2,y=0.9*max(x$obseff1),lab="Summer",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
+          text(x=period,y=catch+max(catch)/offset[2],labels=period)
+         } 
+       axis(side=1,at=seq(head(period,1),tail(period,1),1))
+       axis(side=2,at=NULL)
+       if(hem=="N")
+         {
+          if(tstep=="day")
+            {
+            text(x=079+10,y=0.9*max(catch),lab="Spring",col='blue')
+            text(x=171+10,y=0.9*max(catch),lab="Summer",col='blue')
+            text(x=263+10,y=0.9*max(catch),lab="Fall",col='blue')
+            text(x=354+10,y=0.9*max(catch),lab="Winter",col='blue')
+            abline(v=079,col='blue')
+            abline(v=171,col='blue')
+            abline(v=263,col='blue')
+            abline(v=354,col='blue')
+            }
+          else if(tstep=="week")
+            {
+            text(x=12+2,y=0.9*max(catch),lab="Spring",col='blue')
+            text(x=25+2,y=0.9*max(catch),lab="Summer",col='blue')
+            text(x=38+2,y=0.9*max(catch),lab="Fall",col='blue')
+            text(x=51+2,y=0.9*max(catch),lab="Winter",col='blue')
+            abline(v=12,col='blue')
+            abline(v=25,col='blue')
+            abline(v=38,col='blue')
+            abline(v=51,col='blue')
+            }
+          else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(catch),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(catch),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(catch),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(catch),lab="Wn",col='blue')
+           }
          }
        else
          {
-         text(x=079+10,y=0.9*max(x$obseff1),lab="Fall",col='blue')
-         text(x=171+10,y=0.9*max(x$obseff1),lab="Winter",col='blue')
-         text(x=263+10,y=0.9*max(x$obseff1),lab="Spring",col='blue')
-         text(x=354+10,y=0.9*max(x$obseff1),lab="Summer",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
-         }
-       }
-     plot(x=x$period,y=x$obseff2,xlab=tstep,ylab=paste("Effort (",unit2,")",sep=""),axes=FALSE)
-     axis(side=1,at=seq(head(x$period,1),tail(x$period,1),1))
-     axis(side=2,at=NULL)
-     obseff2.trend    <- loess(x$obseff2~x$period,span=span)
-     obseff2.pred     <- predict(obseff2.trend)
-     lines(x$period,obseff2.pred,col="blue",lwd=1)
-     if(hem=="N")
-       {
-       if(tstep=="Week")
+         if(tstep=="day")
+           {
+           text(x=079+10,y=0.9*max(catch),lab="Fall",col='blue')
+           text(x=171+10,y=0.9*max(catch),lab="Winter",col='blue')
+           text(x=263+10,y=0.9*max(catch),lab="Spring",col='blue')
+           text(x=354+10,y=0.9*max(catch),lab="Summer",col='blue')
+           abline(v=079,col='blue')
+           abline(v=171,col='blue')
+           abline(v=263,col='blue')
+           abline(v=354,col='blue')
+           }
+         else if(tstep=="week")
+           {
+           text(x=12+2,y=0.9*max(catch),lab="Fall",col='blue')
+           text(x=25+2,y=0.9*max(catch),lab="Winter",col='blue')
+           text(x=38+2,y=0.9*max(catch),lab="Spring",col='blue')
+           text(x=51+2,y=0.9*max(catch),lab="Summer",col='blue')
+           abline(v=12,col='blue')
+           abline(v=25,col='blue')
+           abline(v=38,col='blue')
+           abline(v=51,col='blue')
+           }
+         else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(catch),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(catch),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(catch),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(catch),lab="Wn",col='blue')
+           }
+          }
+       plot(x=period,y=spike,main="",xlab=gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", tstep, perl=TRUE),ylab="Catch Spike",axes=FALSE, pch=19)
+       if(mark==TRUE)
          {
-         text(x=12+2,y=0.9*max(x$obseff2),lab="Spring",col='blue')
-         text(x=25+2,y=0.9*max(x$obseff2),lab="Summer",col='blue')
-         text(x=38+2,y=0.9*max(x$obseff2),lab="Fall",col='blue')
-         text(x=51+2,y=0.9*max(x$obseff2),lab="Winter",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
+          text(x=period,y=spike+max(spike)/offset[3],labels=period)
+         } 
+       axis(side=1,at=seq(head(period,1),tail(period,1),1))
+       axis(side=2,at=NULL)
+       abline(h=0)
+       if(hem=="N")
+         {
+          if(tstep=="day")
+            {
+            text(x=079+10,y=0.9*max(spike),lab="Spring",col='blue')
+            text(x=171+10,y=0.9*max(spike),lab="Summer",col='blue')
+            text(x=263+10,y=0.9*max(spike),lab="Fall",col='blue')
+            text(x=354+10,y=0.9*max(spike),lab="Winter",col='blue')
+            abline(v=079,col='blue')
+            abline(v=171,col='blue')
+            abline(v=263,col='blue')
+            abline(v=354,col='blue')
+            }
+          else if(tstep=="week")
+            {
+            text(x=12+2,y=0.9*max(spike),lab="Spring",col='blue')
+            text(x=25+2,y=0.9*max(spike),lab="Summer",col='blue')
+            text(x=38+2,y=0.9*max(spike),lab="Fall",col='blue')
+            text(x=51+2,y=0.9*max(spike),lab="Winter",col='blue')
+            abline(v=12,col='blue')
+            abline(v=25,col='blue')
+            abline(v=38,col='blue')
+            abline(v=51,col='blue')
+            }
+          else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(spike),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(spike),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(spike),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(spike),lab="Wn",col='blue')
+           }
          }
        else
          {
-         text(x=079+10,y=0.9*max(x$obseff2),lab="Spring",col='blue')
-         text(x=171+10,y=0.9*max(x$obseff2),lab="Summer",col='blue')
-         text(x=263+10,y=0.9*max(x$obseff2),lab="Fall",col='blue')
-         text(x=354+10,y=0.9*max(x$obseff2),lab="Winter",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
+         if(tstep=="day")
+           {
+           text(x=079+10,y=0.9*max(spike),lab="Fall",col='blue')
+           text(x=171+10,y=0.9*max(spike),lab="Winter",col='blue')
+           text(x=263+10,y=0.9*max(spike),lab="Spring",col='blue')
+           text(x=354+10,y=0.9*max(spike),lab="Summer",col='blue')
+           abline(v=079,col='blue')
+           abline(v=171,col='blue')
+           abline(v=263,col='blue')
+           abline(v=354,col='blue')
+           }
+         else if(tstep=="week")
+           {
+           text(x=12+2,y=0.9*max(spike),lab="Fall",col='blue')
+           text(x=25+2,y=0.9*max(spike),lab="Winter",col='blue')
+           text(x=38+2,y=0.9*max(spike),lab="Spring",col='blue')
+           text(x=51+2,y=0.9*max(spike),lab="Summer",col='blue')
+           abline(v=12,col='blue')
+           abline(v=25,col='blue')
+           abline(v=38,col='blue')
+           abline(v=51,col='blue')
+           }
+         else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(spike),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(spike),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(spike),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(spike),lab="Wn",col='blue')
+           }
          }
-       }
-     else
-       {
-       if(tstep=="Week")
+       plot(x=period,y=mbw,xlab=gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", tstep, perl=TRUE),ylab=paste("Mean Body Mass (",x$Properties$Units[3],")",sep=""),axes=FALSE, pch=19)
+       axis(side=1,at=seq(head(period,1),tail(period,1),1))
+       axis(side=2,at=NULL)
+       if(hem=="N")
          {
-         text(x=12+2,y=0.9*max(x$obseff2),lab="Fall",col='blue')
-         text(x=25+2,y=0.9*max(x$obseff2),lab="Winter",col='blue')
-         text(x=38+2,y=0.9*max(x$obseff2),lab="Spring",col='blue')
-         text(x=51+2,y=0.9*max(x$obseff2),lab="Summer",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
+          if(tstep=="day")
+            {
+            text(x=079+10,y=0.9*max(mbw),lab="Spring",col='blue')
+            text(x=171+10,y=0.9*max(mbw),lab="Summer",col='blue')
+            text(x=263+10,y=0.9*max(mbw),lab="Fall",col='blue')
+            text(x=354+10,y=0.9*max(mbw),lab="Winter",col='blue')
+            abline(v=079,col='blue')
+            abline(v=171,col='blue')
+            abline(v=263,col='blue')
+            abline(v=354,col='blue')
+            }
+          else if(tstep=="week")
+            {
+            text(x=12+2,y=0.9*max(mbw),lab="Spring",col='blue')
+            text(x=25+2,y=0.9*max(mbw),lab="Summer",col='blue')
+            text(x=38+2,y=0.9*max(mbw),lab="Fall",col='blue')
+            text(x=51+2,y=0.9*max(mbw),lab="Winter",col='blue')
+            abline(v=12,col='blue')
+            abline(v=25,col='blue')
+            abline(v=38,col='blue')
+            abline(v=51,col='blue')
+            }
+          else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(mbw),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(mbw),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(mbw),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(mbw),lab="Wn",col='blue')
+           }
          }
        else
          {
-         text(x=079+10,y=0.9*max(x$obseff2),lab="Fall",col='blue')
-         text(x=171+10,y=0.9*max(x$obseff2),lab="Winter",col='blue')
-         text(x=263+10,y=0.9*max(x$obseff2),lab="Spring",col='blue')
-         text(x=354+10,y=0.9*max(x$obseff2),lab="Summer",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
+         if(tstep=="day")
+           {
+           text(x=079+10,y=0.9*max(mbw),lab="Fall",col='blue')
+           text(x=171+10,y=0.9*max(mbw),lab="Winter",col='blue')
+           text(x=263+10,y=0.9*max(mbw),lab="Spring",col='blue')
+           text(x=354+10,y=0.9*max(mbw),lab="Summer",col='blue')
+           abline(v=079,col='blue')
+           abline(v=171,col='blue')
+           abline(v=263,col='blue')
+           abline(v=354,col='blue')
+           }
+         else if(tstep=="week")
+           {
+           text(x=12+2,y=0.9*max(mbw),lab="Fall",col='blue')
+           text(x=25+2,y=0.9*max(mbw),lab="Winter",col='blue')
+           text(x=38+2,y=0.9*max(mbw),lab="Spring",col='blue')
+           text(x=51+2,y=0.9*max(mbw),lab="Summer",col='blue')
+           abline(v=12,col='blue')
+           abline(v=25,col='blue')
+           abline(v=38,col='blue')
+           abline(v=51,col='blue')
+           }
+         else
+           {
+           text(x=seq(4,tail(period,1),12),y=0.9*max(mbw),lab="Sp",col='blue')
+           text(x=seq(7,tail(period,1),12),y=0.9*max(mbw),lab="Sm",col='blue')
+           text(x=seq(10,tail(period,1),12),y=0.9*max(mbw),lab="Fl",col='blue')
+           text(x=seq(1,tail(period,1),12),y=0.9*max(mbw),lab="Wn",col='blue')
+           }
          }
+       mtext(side=3,outer=TRUE,text=x$Properties$Fleets$Fleet[i])
+       devAskNewPage(ask=TRUE)
        }
-     plot(x=x$period,y=x$obscat,main="",xlab=tstep,ylab=paste("Catch (",mult,")",sep=""),axes=FALSE)
-     axis(side=1,at=seq(head(x$period,1),tail(x$period,1),1))
-     axis(side=2,at=NULL)
-     obscat.trend   <- loess(x$obscat~x$period,span=span)
-     obscat.pred    <- predict(obscat.trend)
-     lines(x=x$period,y=obscat.pred,col="blue",lwd=1)
-     if(hem=="N")
-       {
-       if(tstep=="Week")
-         {
-         text(x=12+2,y=0.9*max(x$obscat),lab="Spring",col='blue')
-         text(x=25+2,y=0.9*max(x$obscat),lab="Summer",col='blue')
-         text(x=38+2,y=0.9*max(x$obscat),lab="Fall",col='blue')
-         text(x=51+2,y=0.9*max(x$obscat),lab="Winter",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
-         }
-       else
-         {
-         text(x=079+10,y=0.9*max(x$obscat),lab="Spring",col='blue')
-         text(x=171+10,y=0.9*max(x$obscat),lab="Summer",col='blue')
-         text(x=263+10,y=0.9*max(x$obscat),lab="Fall",col='blue')
-         text(x=354+10,y=0.9*max(x$obscat),lab="Winter",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
-         }
-       }
-     else
-       {
-       if(tstep=="Week")
-         {
-         text(x=12+2,y=0.9*max(x$obscat),lab="Fall",col='blue')
-         text(x=25+2,y=0.9*max(x$obscat),lab="Winter",col='blue')
-         text(x=38+2,y=0.9*max(x$obscat),lab="Spring",col='blue')
-         text(x=51+2,y=0.9*max(x$obscat),lab="Summer",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
-         }
-       else
-         {
-         text(x=079+10,y=0.9*max(x$obscat),lab="Fall",col='blue')
-         text(x=171+10,y=0.9*max(x$obscat),lab="Winter",col='blue')
-         text(x=263+10,y=0.9*max(x$obscat),lab="Spring",col='blue')
-         text(x=354+10,y=0.9*max(x$obscat),lab="Summer",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
-         }
-       }
-     plot(x=x$period,y=x$mn.wt,xlab=tstep,ylab=paste("Mean Body Mass (",bmunit,")",sep=""),axes=FALSE)
-     axis(side=1,at=seq(head(x$period,1),tail(x$period,1),1))
-     axis(side=2,at=NULL)
-     if(hem=="N")
-       {
-       if(tstep=="Week")
-         {
-         text(x=12+2,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
-         text(x=25+2,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
-         text(x=38+2,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
-         text(x=51+2,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
-         }
-       else
-         {
-         text(x=079+10,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
-         text(x=171+10,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
-         text(x=263+10,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
-         text(x=354+10,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
-         }
-       }
-     else
-       {
-       if(tstep=="Week")
-         {
-         text(x=12+2,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
-         text(x=25+2,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
-         text(x=38+2,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
-         text(x=51+2,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
-         abline(v=12,col='blue')
-         abline(v=25,col='blue')
-         abline(v=38,col='blue')
-         abline(v=51,col='blue')
-         }
-       else
-         {
-         text(x=079+10,y=0.9*max(x$mn.wt),lab="Fall",col='blue')
-         text(x=171+10,y=0.9*max(x$mn.wt),lab="Winter",col='blue')
-         text(x=263+10,y=0.9*max(x$mn.wt),lab="Spring",col='blue')
-         text(x=354+10,y=0.9*max(x$mn.wt),lab="Summer",col='blue')
-         abline(v=079,col='blue')
-         abline(v=171,col='blue')
-         abline(v=263,col='blue')
-         abline(v=354,col='blue')
-         }
-       }
-     mtext(side=3,outer=TRUE,text=top.text)
-     options(warn=0)
+    devAskNewPage(ask=FALSE)
     }

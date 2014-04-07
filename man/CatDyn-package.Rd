@@ -1,63 +1,52 @@
 \name{CatDyn-package}
 \alias{CatDyn-package}
-\alias{CatDyn}
 \docType{package}
 \title{
 Fisheries Stock Assessment by Catch Dynamics Models
 }
 \description{
-Using high-frequency catch and effort data (e.g. daily) CatDyn implements a type
-of stock assessment model oriented to the operational fishing data. The estimated
-parameters are in two groups, stock abundance and fishing operation. CatDyn includes
-model versions that assume all the fish were available at the start of the fishing
-season, or that up to 4 waves of recruitment or fleet area expansions occurred
-during the season.
+Using high-frequency (daily, weekly) or medium frequency (monthly) catch and effort 
+data CatDyn implements a type of stock assessment model oriented to the operational 
+fishing data, aka 'generalized depletion models'. The estimated parameters are in two 
+groups, stock abundance and fishing operation. CatDyn includes model 114 versions of
+the models depending on the number of fleets, the number of perturbations to depletion,
+and the assumed distribution of the catch data.
 }
 \details{
 \tabular{ll}{
 Package: \tab CatDyn\cr
 Type: \tab Package\cr
-Version: \tab 1.0-4\cr
-Date: \tab 2011-09-22\cr
+Version: \tab 1.0-5\cr
+Date: \tab 2014-04-06\cr
 License: \tab GPL (>= 2)\cr
-LazyLoad: \tab yes\cr
 }
-Process biological and fisheries high frequency data using MBWpDaypSam.Fk() and
-BioFishpDay.Fk().
+Create a data object using raw data and the as.CatDynData() function.
+Examine the data for regularities and perturbations using the generic plot()
+function on an object of class CatDynData.
+Examine the goodness of initial parameter values before statistical inference
+by using the catdynexp() exploratory prediction function and the plot
+generic function on an object of class CatDynExp.
+Fit the model to the data by using the wrapper function CatDynFit(), which in turn
+will call the optimx() optimizer wrapper of package optimx, with several 
+numerical methods available to be used.
+Examine the quality of the fit with the plot() function on an object of class
+CatDynMod created by the CatDynPred() function.
 
-Display exploratory plots to select a unit of effort, using
-plot() with methods for class CatDynData.
-
-Pick initial parameter values for one of the twenty versions of
-the model and check them by using the exploratory plot produced
-by generic function plot with methods for class CatDynMod.
-
-Enter the selected initial parameter values transformed to the
-log scale to the wrapper function catdyn() and fit the data to the model.
-
-Inspect results using plot() on an object of class CatDynMod, using the
-estimated parameter values.
-
-The process equations in the catch Dynamics Models in this package are of the form:
-
-C_t = k exp(-M/2) E_t^a N_t^b
-
-N_t = N_0 exp(-Mt) + SUM_j P_j exp(-M(t-j)) - exp(-M/2) SUM_(i<t) C_(t-1) exp(-M(t-i-1))
-
-for t=1, 2, 3, ...
-
-where 'C' is catch in numbers, 't', 'i', 'j' are time step indicators, 'k' is a
-scaling constant, 'E' is fishing effort, an observed predictor of catch, 'a' is a
-parameter of effort synergy or saturability, 'N' is abundance, a latent predictor
-of catch, 'b' is a parameter of hyperstability/hyperdepletion, and 'M' is natural
-mortality rate in units of 1/time step. Latent abundance is expanded
-into three processes. Initial abundance N_0 and its exponential decay due to
-natural mortality M, a number (0, 1, 2, 3, or 4) of perturbations P_j that represent
-fish migrations into the fishing grounds or expansions of the fishing
-grounds by the fleet, resulting in point pulses of abundance, and a third term
-that accounts for the fish that would have been dead due to natural causes but they
-didn't have a chance because they were caught. This latter process is a discount
-applied to the earlier catches in order to avoid an M-biased estimate of N_0.
+The process equations in the Catch Dynamics Models in this package are of the form
+\deqn{C_t = k e^{-M/2} E^{a}_{t} N^{b}_{t}}
+\deqn{N_{t}=N_0 e^{-Mt}+\sum_{j}P_{j} e^{-M(t-j)}-e^{M/2}\sum_{i<t} C_{t-1} e^{-M(t-i-1)}}
+where \emph{C} is catch in numbers, \emph{t}, \emph{i} are time step indicators, \emph{j} 
+is perturbation index (\emph{j}=1,2,...,20), \emph{k} is a scaling constant, \emph{E} is nominal 
+fishing effort, an observed predictor of catch, \emph{a} is a parameter of effort synergy 
+or saturability, \emph{N} is abundance, a latent predictor of catch, \emph{b} is a parameter 
+of hyperstability or hyperdepletion, and \emph{M} is natural mortality rate per time step.
+Perturbations to depletion represent fish migrations into the fishing grounds or expansions of the fishing
+grounds by the fleet(s) resulting in point pulses of abundance. 
+The last summand of the expanded latent predictor is a discount
+applied to the earlier catches in order to avoid an \emph{M}-biased estimate of 
+initial abundance. In 2 fleet cases the fleets contribute complementary information about stock abundance, and 
+thus operate additively; any interaction between the fleets is latent and affects the estimated values
+of fleet dependent parameters, such as \emph{k}, \emph{a}, and \emph{b}.
 
 The observation model can take any of two forms: an additive random normal term
 added to the catch predicted by the process (normal), or a multiplicative
@@ -66,11 +55,17 @@ of this multiplier distributes normally (lognormal).
 
 }
 \author{
-Ruben H. Roa-Ureta
-
-Maintainer: Ruben H. Roa-Ureta <ruben.roa.ureta@gmail.com>
+Ruben H. Roa-Ureta <ruben.roa.ureta@mail.com>
+}
+\references{
+Roa-Ureta, R. H. 2012. ICES Journal of Marine Science 69(8):1403-1415.
 }
 \keyword{ package }
+\keyword{ optimize}
+\keyword{ models}
+\keyword{ nonlinear}
+\keyword{ datasets}
+\keyword{ manip}
 \examples{
-#See examples in the function man pages.
+#See examples for CatDynFit()
 }
