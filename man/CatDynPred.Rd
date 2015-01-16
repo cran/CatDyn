@@ -27,16 +27,17 @@ produced by the optimizer.
 A list of length 2.
 \item{Properties }{A list of length 3. 
 'Units' is a dataframe with the units of time step, 
-catch, body mass, and the numbers multiplier. 'Fleets' is a dataframe with the fleets
+catch, body weight, and the numbers multiplier. 'Fleets' is a dataframe with the fleets
 names and the units of nominal effort for each fleet. 'Dates' is a dataframe with start 
-and end dates of the fishing season or period in the ISO 8601 format}
+and end dates of the fishing season in the ISO 8601 format.}
 \item{Model }{A list of length 5.
 'Type' is the perturbation type of model. 'Dates' is the timing of perturbations,
-'Distr' is the chosen distribution for the observed catch data, 'Parameters' are the 
-maximum likelihood estimates from CatDynFit(), and 'Results', is a dataframe with the time step, 
+'Distr' is the chosen likelihood model, 'Parameters' are the
+maximum likelihood estimates from CatDynFit() plus the observation variance (except
+for adjusted profile likelihood models), and 'Results' is a dataframe with the time step,
 and for each fleet, the observed effort, observed catch, predicted catch, and the 
 residuals, plus two more columns, one with the predicted population abundance, 
-and a final one with the predicted population biomass }
+and a final one with the predicted population biomass. }
 }
 \references{
 Roa-Ureta, R. H. 2012. ICES Journal of Marine Science 69(8):1403-1415.

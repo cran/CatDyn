@@ -4,7 +4,7 @@
 Exploratory Analysis of Catch and Effort Fisheries Data
 }
 \description{
-Allows examinging the relation between catch and effort, the marginal distributions
+Allows examining the relation between catch and effort, the marginal distributions
 of catch and effort, and the time series of catch, effort, the catch spike
 statistic, and mean body mass in the catch.
 }

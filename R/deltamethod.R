@@ -1,11 +1,11 @@
 deltamethod <-
-function(g, mean, cov, ses = TRUE) 
+function(g, mean, cov, ses = TRUE)
                 {
                  cov <- as.matrix(cov)
                  n <- length(mean)
-                 if (!is.list(g)) 
+                 if (!is.list(g))
                      g <- list(g)
-                 if ((dim(cov)[1] != n) || (dim(cov)[2] != n)) 
+                 if ((dim(cov)[1] != n) || (dim(cov)[2] != n))
                      stop(paste("Covariances should be a ", n, " by ", n, " matrix"))
                  syms <- paste("x", 1:n, sep = "")
                  for (i in 1:n) assign(syms[i], mean[i])

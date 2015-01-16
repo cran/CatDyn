@@ -19,7 +19,7 @@ The position of the legend in the first panel. Passed to legend().
 }
   \item{Biom.tstep}{
 Integer. The number of time steps over which to average the population biomass counting
-from the end of the season or period backwards.
+from the end of the season backwards.
 }
   \item{Biom.xpos}{
 Numeric. The position of the biomass value on the x-axis of the first panel of the plot
@@ -43,11 +43,12 @@ A four panel plot of data, model predictions, and residual analysis.
 }
 
 \author{
-Rube H. Roa-Ureta
+Ruben H. Roa-Ureta
 }
 \note{
 The target symbols on the bottom of the tope left panel are the timings of any
 perturbations set by the user.
+In transit fisheries, entry target symbols are in red and exit target symbols are in blue.
 }
 \examples{
 #See examples for CatDynFit().
