@@ -61,13 +61,13 @@ function(x,leg.pos,Biom.tstep,Biom.xpos,Biom.ypos,...)
                     pch=10,cex=3)
             }
          }
-       hist(x=resids,main="",xlab="Residuals",ylab="Frequency")
-       plot(x=period,y=resids,xlab=gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", tstep, perl=TRUE), ylab="Residuals",pch=1,type="n")
+       hist(x=resids,main="",xlab="Deviance Residuals",ylab="Frequency")
+       plot(x=period,y=resids,xlab=gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", tstep, perl=TRUE), ylab="Deviance Residuals",pch=1,type="n")
        abline(h=0,lwd=2)
        text(x=period,y=resids,lab=format(period),cex=0.75)
        qqplot(x=obscat,y=modcat,xlab=paste("Observed Catch (",x$Properties$Units[4],")", sep=""),ylab=paste("Predicted Catch (",x$Properties$Units[4],")", sep=""),pch=1)
        abline(a=0,b=1,lwd=2)
-       mtext(side=3,outer=TRUE,text=paste(fleet.name[i]," - ",x$Model$Type[i]," - ",gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", x$Model$Distribution, perl=TRUE),sep=""))
+       mtext(side=3,outer=TRUE,text=paste(fleet.name[i]," - ",x$Model$Type[i]," - ",gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", x$Model$Distribution[i], perl=TRUE),sep=""))
        options(warn=0)
        devAskNewPage(ask=TRUE)
        }

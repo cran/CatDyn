@@ -5,7 +5,7 @@
 Correlation Plot Among Parameter Estimates
 }
 \description{
-It extracts the correlation matrices output by optimx() numerical methods from several model fits
+It extracts the correlation matrices output by CatDynFit() from several model fits
 and plots histograms of pairwise correlation coefficients.
 }
 \usage{
@@ -27,15 +27,20 @@ A numerical vector of length 2 used to organize the panels containing each histo
 }
 \details{
 The arguments 'x', 'ttl', and 'meths' must be of the same length.
-If a single model fit object of class 'catdyn' was fit with more than one numerical method and you
-wish to plot the correlation histogram plot for more than one of those methods, then repeat the name of the
-object in 'x' and specify the numerical methods in 'meths'.
+
+It might be useful to examine the results of different numerical methods applied
+to the same model with this function. To do this just repeat the name of the 
+object in 'x' and specify the different numerical methods in 'meths'.
 }
 \value{
 A multiple panel correlation plot.
 }
 \author{
 Ruben H. Roa-Ureta
+}
+\note{
+Those histograms that show more correlations concentrated around zero indicate a 
+better fit.
 }
 \examples{
 #See examples for CatDynFit().

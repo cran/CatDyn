@@ -11,7 +11,7 @@ catdyn(x, ...)
 }
 \arguments{
   \item{x}{
-A list object coming from the optimization wrapper CatDyn().
+A list object coming from the optimization wrapper CatDynFit().
 }
   \item{\dots}{
 Not used.

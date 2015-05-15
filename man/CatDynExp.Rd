@@ -4,7 +4,8 @@
 Class Attribute of Exploratory Analysis Object
 }
 \description{
-To be used by plot.CatDynExp() to explore initial parameter values before fitting models.
+To be used by plot.CatDynExp() to explore initial parameter values before fitting 
+models.
 }
 \usage{
 CatDynExp(x, ...)

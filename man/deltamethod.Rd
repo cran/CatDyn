@@ -4,9 +4,9 @@
 First-order Taylor Series Expansion of Functions of Random Variables
 }
 \description{
-The delta method for approximating the standard error of a transformation \emph{g}(\emph{X}) 
-of a random variable \emph{X} = (\emph{x}1, \emph{x}2, ...), given estimates of the mean and covariance 
-matrix of \emph{X}. 
+The delta method for approximating the standard error of a transformation 
+\emph{g}(\emph{X}) of a random variable \emph{X} = (\emph{x}1, \emph{x}2, ...), 
+given estimates of the mean and covariance matrix of \emph{X}. 
 }
 \usage{
 deltamethod(g, mean, cov, ses = TRUE)
@@ -15,9 +15,10 @@ deltamethod(g, mean, cov, ses = TRUE)
 \arguments{
   \item{g}{
 A formula representing the transformation. The variables must be 
-labelled \emph{x}1, \emph{x}2, ... For example, ~ 1 / (\emph{x}1 + \emph{x}2). If the transformation returns 
-a vector, then a list of formulae representing (\emph{g}1, \emph{g}2, ...) can be provided, for 
-example list( ~ \emph{x}1 + \emph{x}2, ~ \emph{x}1 / (\emph{x}1 + \emph{x}2) ).
+labelled \emph{x}1, \emph{x}2, ... For example, ~ 1 / (\emph{x}1 + \emph{x}2). 
+If the transformation returns a vector, then a list of formulae representing 
+(\emph{g}1, \emph{g}2, ...) can be provided, for example list( ~ \emph{x}1 + 
+\emph{x}2, ~ \emph{x}1 / (\emph{x}1 + \emph{x}2) ).
 }
   \item{mean}{
 The estimated mean of \emph{X}.
@@ -26,8 +27,8 @@ The estimated mean of \emph{X}.
 The estimated covariance matrix of \emph{X}.
 }
   \item{ses}{
-If TRUE, then the standard errors of \emph{g}1(\emph{X}), \emph{g}2(\emph{X}), ... are returned. Otherwise the 
-covariance matrix of \emph{g}(\emph{X}) is returned.
+If TRUE, then the standard errors of \emph{g}1(\emph{X}), \emph{g}2(\emph{X}), 
+... are returned. Otherwise the covariance matrix of \emph{g}(\emph{X}) is returned.
 }
 }
 \details{
@@ -37,7 +38,8 @@ to improve numerical performance.
 For more details see the help pages for function deltamethod of package msm.
 }
 \value{
-A vector containing the standard errors of \emph{g}1(\emph{X}), \emph{g}2(\emph{X}), ... or a matrix containing the covariance of \emph{g}(\emph{X}). 
+A vector containing the standard errors of \emph{g}1(\emph{X}), \emph{g}2(\emph{X}), 
+... or a matrix containing the covariance of \emph{g}(\emph{X}). 
 }
 \author{
 C. H. Jackson <chris.jackson@mrc-bsu.cam.ac.uk>

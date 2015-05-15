@@ -1,7 +1,7 @@
 \name{CatDynSum}
 \alias{CatDynSum}
 \title{
-Summary Table for Model Comparison
+Summary Table for Generalized Depletion (Catch Dynamics) Model Comparison
 }
 \description{
 Summarize information theoretic, numerical and statistical results of several models
@@ -18,17 +18,20 @@ A list of model objects of class 'catdyn' output by CatDynFit().
 Character, an identifier for the set of models.
 }
   \item{meths}{
-A character vector of numerical methods to extract from each element of the 'x' list.
+A character vector of numerical methods to extract from each element of the 'x' 
+list.
 }
 }
 \details{
 The arguments 'x' and 'meths' must be of the same length.
-If a single model fit object of class 'catdyn' was fit with more than one numerical method and you
-wish to include a row of the summary for more than one of those methods, then repeat the name of the
-object in 'x' and specify the numerical methods in 'meths'.
+
+It might be useful to examine the results of different numerical methods applied
+to the same model with this function. To do this just repeat the name of the 
+object in 'x' and specify the different numerical methods in 'meths'.
 }
 \value{
-A data.frame with an extraction of information from several models fitted to the data.
+A data.frame with an extraction of comparative information from several models 
+fitted to the data.
 }
 \author{
 Ruben H. Roa-Ureta

@@ -18,24 +18,24 @@ An object of class CatDynMod.
 The position of the legend in the top left panel. Passed to legend().
 }
   \item{Biom.tstep}{
-Integer. The number of time steps over which to average the population biomass counting
-from the end of the season backwards.
+Integer. The number of time steps over which to average the population biomass 
+counting from the end of the season backwards.
 }
   \item{Biom.xpos}{
-Numeric. The position of the biomass estimate on the x-axis of the first panel of the plot
-in relative units.
+Numeric. The position of the biomass estimate on the x-axis of the first panel 
+of the plot in relative units.
 }
   \item{Biom.ypos}{
-Numeric. The position of the biomass estimate on the y-axis of the first panel of the plot
-in relative units.
+Numeric. The position of the biomass estimate on the y-axis of the first panel 
+of the plot in relative units.
 }
   \item{AIC.xpos}{
-Numeric. The position of the Akaike Information Criterion on the x-axis of the first panel 
-of the plot in relative units.
+Numeric. The position of the Akaike Information Criterion on the x-axis of the 
+first panel of the plot in relative units.
 }
   \item{AIC.ypos}{
-Numeric. The position of the Akaike Information Criterion on the y-axis of the first panel 
-of the plot in relative units.
+Numeric. The position of the Akaike Information Criterion on the y-axis of the 
+first panel of the plot in relative units.
 }
   \item{\dots}{
 Further arguments to pass to plot(), hist().
@@ -58,7 +58,9 @@ Ruben H. Roa-Ureta
 \note{
 The target symbols on the bottom of the tope left panel are the timings of any
 perturbations set by the user.
-In transit fisheries, entry target symbols are in red and exit target symbols are in blue.
+
+In transit fisheries, entry target symbols are in red and exit target symbols 
+are in blue.
 }
 \examples{
 #See examples for CatDynFit().
