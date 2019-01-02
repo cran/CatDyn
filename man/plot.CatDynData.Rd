@@ -6,7 +6,7 @@ Exploratory Analysis of Catch and Effort Fisheries Data
 \description{
 Allows examining the relation between catch and effort, the marginal distributions
 of catch and effort, and the time series of catch, effort, the catch spike
-statistic, and mean body mass in the catch.
+statistic, and mean body weight in the catch.
 }
 \usage{
 \method{plot}{CatDynData}(x, mark, offset, hem, \dots)
@@ -24,7 +24,7 @@ Numeric. A vector of length 3 that positions the mark above a given distance
 over the point.
 }
   \item{hem}{
-Character. Either "N" (northern hemisphere) or "S" (southern hemisphere).
+Character. Either N (northern hemisphere) or S (southern hemisphere).
 }
   \item{\dots}{
 Further arguments to be passed to plot(), hist().
@@ -40,7 +40,7 @@ fleet, then the user needs to hit Enter to display the data for the second fleet
 A seven panel plot.
 }
 \author{
-Ruben H. Roa-Ureta
+Ruben H. Roa-Ureta (ORCID ID 0000-0002-9620-5224)
 }
 \examples{
 #See examples for CatDynFit().

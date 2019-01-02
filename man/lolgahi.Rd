@@ -8,7 +8,7 @@ Industrial Trawling Data from the Squid Fishery of the Falkland Islands
 Exhaustive recorded operational activity of the \emph{Loligo gahi} fleet off the Falkland 
 Islands during the summer season of 1990.
 }
-\usage{data(lolgahi)}
+\usage{data("lolgahi")}
 \format{
   A data frame with 120 observations on the following 6 variables.
   \describe{
@@ -18,7 +18,7 @@ Islands during the summer season of 1990.
   }
 }
 \source{
-http://fis.com/falklandfish/
+Department of Fisheries, Falklands Islands government.
 }
 \references{
 Roa-Ureta, R. H. 2012. ICES Journal of Marine Science 69(8):1403-1415.

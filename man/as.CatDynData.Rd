@@ -52,7 +52,7 @@ dates of the season in the ISO 8601 standard.
 }
 }
 \details{
-The time step determines the rows of 'x'. Make it sure that the number of rows, 
+The time step determines the rows of x. Make it sure that the number of rows,
 i.e. the length of the season in time steps, is large enough to estimate all 
 parameters in the model. The simplest model has five parameters, the most complex 
 model has 50 parameters. A rule of thumb would be that the number of time steps 
@@ -73,16 +73,16 @@ that in many fisheries the daily, weekly, or monthly catch (for example, anchovi
 squids) is very large so by setting the multiplier to "bill", "mill", or "thou", 
 the model is working with catches in the orders of tens at most. If the multiplier 
 is set to "ind" then the catch is modeled at the level of the actual catch by time 
-step. This option is useful for sport fisheries, in combination with the 'poisson' 
-or 'negbin' option for distribution.
+step. This option is useful for sport fisheries, in combination with the poisson
+or negbin option for distribution.
 
-The 'season.dates' parameter will allow counting the number of steps in integer 
+The season.dates parameter will allow counting the number of steps in integer
 sequential fashion. If the "time.step" parameter is "day" or "week" the dates may 
-jump one year at most, whereas if the 'time.step' parameter is "month" then 
-'season.dates' may jump over many years. When the time step is week or months, 
+jump one year at most, whereas if the time.step parameter is "month" then
+season.dates may jump over many years. When the time step is week or months,
 this parameter needs not be precisely specified; any day within the right week 
 or month will suffice. If you get an error message saying that the number of time 
-steps is not right and that you should consider changing 'season.dates', then just 
+steps is not right and that you should consider changing season.dates, then just
 change the dates a few days until you no longer get the error message.
 
 The catch spike statistic is a fleet-specific statistic that is useful to identify 
@@ -106,12 +106,14 @@ A list of length 2.
 
 }
 \references{
-Roa-Ureta, R. H. 2012. ICES J. Mar. Sci. 69:1403-1415.
-Roa-Ureta, R. H. 2015. Fisheries Research (In Press), doi:10.1016/j.fishres.2014.08.014
-Roa-Ureta, R. H. et al. 2015. Fisheries Research (In Press), doi:10.1016/j.fishres.2014.12.006
+Roa-Ureta, R. H. 2012. ICES Journal of Marine Science 69(8), 1403-1415.
+
+Roa-Ureta, R. H. et al. 2015. Fisheries Research 171 (Special Issue), 59-67.
+
+Roa-Ureta, R. H. 2015. Fisheries Research 171 (Special Issue), 68-77.
 }
 \author{
-Ruben H. Roa-Ureta
+Ruben H. Roa-Ureta (ORCID ID 0000-0002-9620-5224)
 }
 \note{
 The objects created with as.CatDynData will pass the raw data to plotting and 

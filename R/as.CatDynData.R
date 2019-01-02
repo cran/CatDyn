@@ -25,14 +25,14 @@ function(x,step,fleet.name,coleff,colcat,colmbw,unitseff,unitscat,unitsmbw,nmult
     cateff$Properties              <- vector("list",3)
     names(cateff$Properties)       <- c("Units","Fleets","Dates")
     cateff$Properties$Units        <- c(step,unitscat,unitsmbw,nmult)
-    names(cateff$Properties$Units) <- c("Time Step","Biomass","Bodymass","NumbersMultiplier")
+    names(cateff$Properties$Units) <- c("Time Step","Catch","Bodymass","NumbersMultiplier")
     cateff$Properties$Fleets       <- data.frame(Fleet=fleet.name,Units=unitseff,stringsAsFactors=FALSE)
     cateff$Properties$Dates        <- season.dates
     names(cateff$Properties$Dates) <- c("StartDate","EndDate")
     if(step == "day")
       {
        if(paste(substr(season.dates[1],5,5),substr(season.dates[1],8,8),sep="") != "--" || paste(substr(season.dates[2],5,5),substr(season.dates[2],8,8),sep="") != "--")
-        {stop("dates of weekly catch dynamics must be a length 2 character vector with dates in the ISO 8601 international standard, i.e. yyyy-mm-dd")}
+        {stop("dates of daily catch dynamics must be a length 2 character vector with dates in the ISO 8601 international standard, i.e. yyyy-mm-dd")}
        if(as.numeric(format(as.Date(season.dates[2],"%Y-%m-%d"), "%Y")) - as.numeric(format(as.Date(season.dates[1],"%Y-%m-%d"), "%Y")) > 1)
          {stop("For a daily time step the modeling is seasonal, involving no more than two calendar years")}
        if(as.numeric(format(as.Date(season.dates[1],"%Y-%m-%d"), "%Y")) > as.numeric(format(as.Date(season.dates[2],"%Y-%m-%d"), "%Y")))
@@ -64,87 +64,87 @@ function(x,step,fleet.name,coleff,colcat,colmbw,unitseff,unitscat,unitsmbw,nmult
                                            paste("obsmbw.",unitsmbw,sep="")); 
          if(nmult == "bill" && unitscat == "ton" && unitsmbw == "g")
           { 
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
           else if(nmult == "mill" && unitscat == "ton" && unitsmbw == "g")
           { 
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ton" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e3*cateff[,3][[i]]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e3*cateff[,3][[i]]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ton" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "ind" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.ind2    <- cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.ind2    <- ifelse(cateff$Data[[i]][,3]==0,0,cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          cateff$Data[[i]]$spikecat  <- unlist(10*(cateff$Data[[i]][5]/max(cateff$Data[[i]][5])-cateff$Data[[i]][2]/max(cateff$Data[[i]][2])));
         }
@@ -172,95 +172,95 @@ function(x,step,fleet.name,coleff,colcat,colmbw,unitseff,unitscat,unitsmbw,nmult
                      as.numeric(format(as.Date(season.dates[2],"%Y-%m-%d"),"%W"))})
        for(i in 1:length(fleet.name))
          {
-         if(length(start:end) != length(x[,coleff[i]]))
-           {stop("Check season.dates, you have a number of weeks that is not identical to the number of effort/catch/mean body weight observations \n Consider changing the dates")}
+#         if(length(start:end) != length(x[,coleff[i]]))
+#           {stop("Check season.dates, you have a number of weeks that is not identical to the number of effort/catch/mean body weight observations \n Consider changing the dates")}
          cateff$Data[[i]]              <- data.frame(time.step=start:end,x[,coleff[i]],x[,colcat[i]],x[,colmbw[i]]);
          names(cateff$Data[[i]])[2:4]  <-c(paste("obseff.",unitseff[i],sep=""),
                                            paste("obscat.",unitscat,sep=""),
                                            paste("obsmbw.",unitsmbw,sep="")); 
          if(nmult == "bill" && unitscat == "ton" && unitsmbw == "g")
           { 
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ton" && unitsmbw == "g")
           { 
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ton" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e3*cateff[,4][[i]]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e3*cateff[,4][[i]]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ton" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "ind" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.ind2    <- cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.ind2    <- ifelse(cateff$Data[[i]][,3]==0,0,cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          cateff$Data[[i]]$spikecat  <- unlist(10*(cateff$Data[[i]][5]/max(cateff$Data[[i]][5])-cateff$Data[[i]][2]/max(cateff$Data[[i]][2])));
         }
@@ -282,6 +282,10 @@ function(x,step,fleet.name,coleff,colcat,colmbw,unitseff,unitscat,unitsmbw,nmult
        end           <- as.numeric(format(as.Date(season.dates[2],"%Y-%m-%d"),"%m"))*
                        (as.numeric(format(as.Date(season.dates[2],"%Y-%m-%d"),"%Y"))-as.numeric(format(as.Date(season.dates[1],"%Y-%m-%d"),"%Y"))+1);
        if(start >= end) {stop("Dates must be arranged in ascending order")}
+       if(as.numeric(format(as.Date(season.dates[1],"%Y-%m-%d"),"%m")) > 1)
+         {stop("For multi-annual models with monthly time step the catch and effort data must start in January of the first year. \n If the fishing season starts at a later month, add lines with 0s to the catch and effort of earlier months backward to January")}
+       if(as.numeric(format(as.Date(season.dates[2],"%Y-%m-%d"),"%m")) < 12)
+         {stop("For multi-annual models with monthly time step the catch and effort data must end in December of the last year. \n If the fishing season ends at an earlier month, add lines with 0s to the catch and effort of later months forward to December")}
        for(i in 1:length(fleet.name))
          {
          cateff$Data[[i]]              <- data.frame(time.step=seq(start,end,1),x[,coleff[i]],x[,colcat[i]],x[,colmbw[i]]);
@@ -290,87 +294,87 @@ function(x,step,fleet.name,coleff,colcat,colmbw,unitseff,unitscat,unitsmbw,nmult
                                            paste("obsmbw.",unitsmbw,sep="")); 
          if(nmult == "bill" && unitscat == "ton" && unitsmbw == "g")
           { 
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ton" && unitsmbw == "g")
           { 
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ton" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e3*cateff[,3][[i]]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e3*cateff[,3][[i]]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ton" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ton" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "kg" && unitsmbw == "g")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*1e3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "kg" && unitsmbw == "kg")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "bill" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.bill    <- 1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.bill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-9*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "mill" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.mill    <- 1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.mill    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-6*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "thou" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.thou    <- 1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.thou    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-3*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "hund" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.hund    <- 1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.hund    <- ifelse(cateff$Data[[i]][,3]==0,0,1e-2*cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          else if(nmult == "ind" && unitscat == "ind" && unitsmbw == "ind")
           {
-           cateff$Data[[i]]$obscat.ind2    <- cateff$Data[[i]][,3]/cateff$Data[[i]][,4];
+           cateff$Data[[i]]$obscat.ind2    <- ifelse(cateff$Data[[i]][,3]==0,0,cateff$Data[[i]][,3]/cateff$Data[[i]][,4]);
           }
          cateff$Data[[i]]$spikecat  <- unlist(10*(cateff$Data[[i]][5]/max(cateff$Data[[i]][5])-cateff$Data[[i]][2]/max(cateff$Data[[i]][2])));
         }

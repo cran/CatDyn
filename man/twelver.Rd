@@ -18,6 +18,9 @@ fishery in Taiwan during the 1983-1984 season.
     \item{\code{Mbw}}{a numeric vector}
   }
 }
+\references{
+Lin, Y-J. et al. 2017. Fisheries Research 195, 130-140
+}
 \source{
 Dpt. of Zoology, National Taiwan University
 }

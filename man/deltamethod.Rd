@@ -11,7 +11,6 @@ given estimates of the mean and covariance matrix of \emph{X}.
 \usage{
 deltamethod(g, mean, cov, ses = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{g}{
 A formula representing the transformation. The variables must be 
@@ -32,9 +31,12 @@ If TRUE, then the standard errors of \emph{g}1(\emph{X}), \emph{g}2(\emph{X}),
 }
 }
 \details{
-This function was copied from package msm. It is used in CatDyn to backtransform
+This function was copied from package msm.
+
+It is used in CatDyn to backtransform
 from the logarithm because CatDyn parameters are all estimated in the log scale
 to improve numerical performance.
+
 For more details see the help pages for function deltamethod of package msm.
 }
 \value{

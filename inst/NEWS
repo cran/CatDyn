@@ -1,0 +1,59 @@
+New in CatDyn 1.1.1
+
+1 Expand model types to 25 perturbations for single fleet and two-fleet models
+
+2 Fix error message, max. number of par is 50, not 208
+
+3 Add error message when abundance is NaN in catdynexp (NA when TRUE/FALSE needed in Results[,4]
+
+4 Some double ;; in likelihood models
+
+5 Correct error in 2P2P, naming pars with “P3.” and missing two lines after hessian in the call to optimx.
+
+6 Correct error in naming pars “P8,” intead of “P8.”
+
+7 Make Biom.tstep in plot.CatDynExp the same as in plot.CatDynMod and correct help pages.
+
+8 Allow to plot just the fit for results (not the residuals nor the quantiles) in plot.CatDynMod and allow option to change the sizing of panels
+
+9 Change names in data.frame catdynexp$Model$Results to eliminate spaces, replace with short version with dots
+
+10 Correct error in AIC 2par-2loglik, loglik is actually the minimized negative, so formula should be 2par+2loglik.
+
+11 Add robust lognormal likelihood
+
+12 Add Gumbel likelihood
+
+13 Correct as.CatDynData by allowing 0 catch time steps without causing NaN in catch in numbers
+
+14 Add CatDynPar function, for neat table of parameter estimates, with effort to present the timing of perturbations in ISO8601 format
+
+15 Add error message when fleet 1 has more perts than fleet 2
+
+16 Put aggregated catch over user-specified number of time steps in weight in predictive plot
+
+17 Add M.Hoenig function for mortality rate and its prediction error to get a good initial value for M from longevity data when starting the stock assessment for a new stock
+
+18 Add the catch by time step in fixed kg units to CatDynPred and fix units of biomass to tons
+
+19 Add caclulation of explotation rates by time steps to CatDynPred. 
+Observed exploitation rate = observed catch in weight/predicted biomass
+Expected exploitation rate = predicted catch in weight/predicted biomass
+
+20 Add estimation of fishing mortality F from exploitation rate  to CatDynPred
+Solve for F in Baranov exploitation rate (F/(F+M))(1-exp(-F-M)) using uniroot().
+Observed F = using observed exploitation rate
+Expected F = using expected exploitation rate
+
+21 Add function CatDynBSD for annual biomass and its standard error for hierarchical estimation of surplus production model
+
+22 Add function mobw.kg to calculate mean weight and its standard error by month using timeless length and weight data and sequential length and month data.
+
+23 Add length and weight, length and month data from gay hake to use in mobw.kg example
+
+25 Add m.hoenig data of natural mortality (1/yr) and longevity (yr) as published in Hoenig (2005)
+
+26 Create newmodel type, resident stock with partial emigration, inspired by fishery for octpus in Asturias, northern Spain, set with p negative and partial = TRUE.
+
+27 Add partial=TRUE to CatDynFit, CatDynPred, candynexp and all internal functions called by these to accommodate the new model type in 26. Only transit models need to be set by making partial=FALSE overriding default.
+

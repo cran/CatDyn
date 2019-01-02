@@ -1,0 +1,68 @@
+citHeader("To cite CatDyn in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Modeling In-Season Pulses of Recruitment and Hyperstability-Hyperdepletion in the Loligo gahi Fishery of the Falkland Islands with Generalized Depletion Models",
+  author       = personList(as.person("Ruben H. Roa-Ureta")),
+  journal      = "ICES Journal of Marine Science",
+  year         = "2011",
+  volume       = "69",
+  number       = "8",
+  pages        = "1403--1415",
+  url          = "https://doi.org/10.1093/icesjms/fss110",
+
+  textVersion  =
+  paste("Ruben H. Roa-Ureta (2012).",
+        "Modeling In-Season Pulses of Recruitment and Hyperstability-Hyperdepletion in the Loligo gahi Fishery of the Falkland Islands with Generalized Depletion Models",
+        "ICES Journal of Marine Science, 68(8), 1403-1415.",
+        "URL https://doi.org/10.1093/icesjms/fss110.")
+)
+
+citEntry(entry = "Article",
+  title        = "Stock assessment of the Spanish mackerel (Scomberomorus commerson) in Saudi waters of the Arabian Gulf with generalized depletion models under data-limited conditions",
+  author       = personList(as.person("Ruben H. Roa-Ureta")),
+  journal      = "Fisheries Research",
+  year         = "2015",
+  volume       = "171",
+  number       = "Special Issue",
+  pages        = "68--77",
+  url          = "http://dx.doi.org/10.1016/j.fishres.2014.08.014",
+
+  textVersion  =
+  paste("Ruben H. Roa-Ureta (2015).",
+        "Stock assessment of the Spanish mackerel (Scomberomorus commerson) in Saudi waters of the Arabian Gulf with generalized depletion models under data-limited conditions",
+        "Fisheries Research, 171, 68-77.",
+        "URL http://dx.doi.org/10.1016/j.fishres.2014.08.014")
+)
+
+citEntry(entry = "Article",
+  title        = "Hierarchical statistical framework to combine generalized depletion models and biomass dynamic models in the stock assessment of the Chilean sea urchin (Loxechinus albus) fishery",
+  author       = personList(as.person("Ruben H. Roa-Ureta"), as.person("C. Molinet"), as.person("N. Bahamonde"), as.person("P. Araya")),
+  journal      = "Fisheries Research",
+  year         = "2015",
+  volume       = "171",
+  number       = "Special Issue",
+  pages        = "59--67",
+  url          = "http://dx.doi.org/10.1016/j.fishres.2014.12.006",
+
+  textVersion  =
+  paste("Ruben H. Roa-Ureta, C. Molinet, N. Bahamonde, P. Araya (2015).",
+        "Hierarchical statistical framework to combine generalized depletion models and biomass dynamic models in the stock assessment of the Chilean sea urchin (Loxechinus albus) fishery",
+        "Fisheries Research, 171, 59-67.",
+        "URL http://dx.doi.org/10.1016/j.fishres.2014.12.006")
+)
+
+citEntry(entry = "Article",
+  title        = "A stock assessment model for transit stock fisheries with explicit immigration and emigration dynamics: application to upstream waves of glass eels",
+  author       = personList(as.person("Y-J. Lin"), as.person("W-N. Tzeng"), as.person("Y-S. Han"), as.person("Ruben H. Roa-Ureta")),
+  journal      = "Fisheries Research",
+  year         = "2017",
+  volume       = "195",
+  pages        = "130--140",
+  url          = "http://dx.doi.org/10.1016/j.fishres.2017.07.009",
+
+  textVersion  =
+  paste("Y-J. Lin, W-N. Tzeng, Y-S. Han, Ruben H. Roa-Ureta (2017).",
+        "A stock assessment model for transit stock fisheries with explicit immigration and emigration dynamics: application to upstream waves of glass eels",
+        "Fisheries Research, 195, 130-140.",
+        "URL http://dx.doi.org/10.1016/j.fishres.2017.07.009")
+)

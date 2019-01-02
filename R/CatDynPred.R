@@ -1,5 +1,5 @@
 CatDynPred <-
-function(x, method)
+function(x, method,partial=TRUE)
    {
      fleet.name <- x$Data$Properties$Fleets$Fleet;
      p          <- x$Model[[method]]$Type;
@@ -18,12 +18,13 @@ function(x, method)
        {
         parlist <- list(par=log(as.numeric(x$Model[[method]]$bt.par)), 
                         dates=x$Model[[method]]$Dates, 
-                        obscat1=x$Data$Data[[fleet.name]][,5], 
+                        obscat1=x$Data$Data[[fleet.name]][,5], #in numbers
                         obseff1=x$Data$Data[[fleet.name]][,2], 
                         obsmbm1=x$Data$Data[[fleet.name]][,4], 
                         distr=x$Model[[method]]$Distr, 
                         properties=x$Data$Properties,
-                        output="predict")
+                        output="predict",
+                        partial=partial)
         if(p == 0)
           {
           results <- do.call(.CDMN0P, parlist);
@@ -188,6 +189,46 @@ function(x, method)
           {
           results <- do.call(.CDMNT20P, parlist);
           }
+        else if(p == 21)
+          {
+          results <- do.call(.CDMN21P, parlist);
+          }
+        else if(p == -21)
+          {
+          results <- do.call(.CDMNT21P, parlist);
+          }
+        else if(p == 22)
+          {
+          results <- do.call(.CDMN22P, parlist);
+          }
+        else if(p == -22)
+          {
+          results <- do.call(.CDMNT22P, parlist);
+          }
+        else if(p == 23)
+          {
+          results <- do.call(.CDMN23P, parlist);
+          }
+        else if(p == -23)
+          {
+          results <- do.call(.CDMNT23P, parlist);
+          }
+        else if(p == 24)
+          {
+          results <- do.call(.CDMN24P, parlist);
+          }
+        else if(p == -24)
+          {
+          results <- do.call(.CDMNT24P, parlist);
+          }
+        else if(p == 25)
+          {
+          results <- do.call(.CDMN25P, parlist);
+          }
+        else if(p == -25)
+          {
+          results <- do.call(.CDMNT25P, parlist);
+          }
        }
      else if(length(fleet.name) == 2) 
        {
@@ -345,6 +386,26 @@ function(x, method)
         else if(sum(p==c(20,20)) == length(p))
           {
           results <- do.call(.CDMN20P20P, parlist);
+          }
+        else if(sum(p==c(21,21)) == length(p))
+          {
+          results <- do.call(.CDMN21P21P, parlist);
+          }
+        else if(sum(p==c(22,22)) == length(p))
+          {
+          results <- do.call(.CDMN22P22P, parlist);
+          }
+        else if(sum(p==c(23,23)) == length(p))
+          {
+          results <- do.call(.CDMN23P23P, parlist);
+          }
+        else if(sum(p==c(24,24)) == length(p))
+          {
+          results <- do.call(.CDMN24P24P, parlist);
+          }
+        else if(sum(p==c(25,25)) == length(p))
+          {
+          results <- do.call(.CDMN25P25P, parlist);
           }
        }
      results$Model$Method     <- method;

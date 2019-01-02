@@ -21,7 +21,7 @@ Not used.
 A class attribute.
 }
 \author{
-Ruben H. Roa-Ureta
+Ruben H. Roa-Ureta (ORCID ID 0000-0002-9620-5224)
 }
 \examples{
 #See examples for CatDynFit().
